@@ -1,0 +1,69 @@
+/* 全局样式：统一整个项目的基础风格 */
+
+/* 1. 清除浏览器默认样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 2. 统一整个项目的字体 */
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  background-color: #f5f5f5;
+}
+
+/* 3. 统一页面宽度为手机尺寸（390px） */
+#app {
+  width: 390px;
+  height: 830px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background-color: #ffffff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 4. 统一图片样式 */
+img {
+  width: 100%;
+  height: auto;
+}
+
+/* 5. 统一按钮样式（可根据你的主题色改） */
+button {
+  border: none;
+  outline: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  background-color: #42b983;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #359469;
+}
+
+/* 6. 统一输入框样式 */
+input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+/* 7. 统一标题样式 */
+h1, h2, h3, h4, h5 {
+  color: #333;
+}
+
+/* 8. 统一链接样式 */
+a {
+  text-decoration: none;
+  color: #42b983;
+}
