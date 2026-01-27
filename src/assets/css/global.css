@@ -1,37 +1,60 @@
-/* 全局样式：统一整个项目的基础风格 */
-
-/* 1. 清除浏览器默认样式 */
+/* 全局样式 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 2. 统一整个项目的字体 */
 body {
   font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
   background-color: #f5f5f5;
+  overflow-x: hidden;
+  min-height: 100vh;
+  /* 确保body没有默认的margin/padding */
+  margin: 0;
+  padding: 0;
 }
 
-/* 3. 统一页面宽度为手机尺寸（390px） */
+/* #app 基础样式：彻底铺满 */
 #app {
-  width: 390px;
-  height: 830px;
-  margin: 0 auto;
+  width: 100vw; /* 使用100vw强制占满视口宽度 */
   min-height: 100vh;
+  margin: 0; /* 去掉居中的margin */
+  padding: 0; /* 去掉默认内边距 */
   background-color: #ffffff;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow-x: hidden;
+  box-shadow: none;
 }
 
-/* 4. 统一图片样式 */
-img {
-  width: 100%;
-  height: auto;
+/* 手机端（≤767px）：保持全屏 */
+@media screen and (max-width: 767px) {
+  #app {
+    width: 100vw;
+    padding: 0;
+  }
 }
 
-/* 5. 统一按钮样式（可根据你的主题色改） */
+/* 平板/桌面端（≥768px）：强制铺满 */
+@media screen and (min-width: 768px) {
+  #app {
+    width: 100vw;
+    padding: 0;
+  }
+}
+
+/* 大屏PC端（≥1200px）：仅给内容区加内边距，避免贴边 */
+@media screen and (min-width: 1200px) {
+  .content-area {
+    padding: 0 80px;
+  }
+}
+
+/* 给内部内容区加基础内边距，避免贴边 */
+.content-area {
+  padding: 0 15px;
+}
+/* 统一按钮样式（基础移动端） */
 button {
   border: none;
   outline: none;
@@ -41,13 +64,15 @@ button {
   color: #ffffff;
   font-size: 16px;
   cursor: pointer;
+  /* 移动端按钮宽度100%，方便点击 */
+  width: 100%;
 }
 
 button:hover {
   background-color: #359469;
 }
 
-/* 6. 统一输入框样式 */
+/* 统一输入框样式（基础移动端） */
 input {
   width: 100%;
   padding: 12px 15px;
@@ -57,13 +82,57 @@ input {
   margin-bottom: 15px;
 }
 
-/* 7. 统一标题样式 */
+/* 统一标题样式 */
 h1, h2, h3, h4, h5 {
   color: #333;
+  /* 移动端标题字号 */
+  font-size: 18px;
 }
 
-/* 8. 统一链接样式 */
+/* PC端按钮/输入框/标题适配 */
+@media screen and (min-width: 391px) {
+  button {
+    /* PC端按钮宽度自适应内容，不占满整行 */
+    width: auto;
+    /* PC端按钮加大内边距 */
+    padding: 14px 24px;
+    font-size: 18px;
+  }
+
+  input {
+    padding: 14px 18px;
+    font-size: 18px;
+    margin-bottom: 20px;
+    /* PC端输入框最大宽度限制，避免过宽 */
+    max-width: 500px;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-size: 22px;
+  }
+}
+
+/* 大屏PC适配 */
+@media screen and (min-width: 1200px) {
+  input {
+    max-width: 600px;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-size: 24px;
+  }
+}
+
+/* 统一链接样式 */
 a {
   text-decoration: none;
   color: #42b983;
+}
+
+/* 统一图片样式：保持响应式 */
+img {
+  width: 100%;
+  height: auto;
+  /* 防止图片超出容器 */
+  max-width: 100%;
 }
