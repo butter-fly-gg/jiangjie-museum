@@ -35,7 +35,7 @@
     <div class="feature-bar">
       <div class="feature-tag">自贡名片</div>
       <div class="feature-label">第九批</div>
-      <button class="experience-btn">抢光体验</button>
+      <button class="experience-btn">抢先体验</button>
     </div>
 
     <!-- 优惠横幅 -->
@@ -49,7 +49,7 @@
       <!-- 原有预约卡片内容保持不变 -->
       <div class="card-header">
         <span class="main-title">预约详情</span>
-        <span class="sub-header">当前场馆:江姐生平事迹陈列展主馆</span>
+        <span class="sub-header"><img src="../imgs/图层 16.png" >当前场馆:江姐生平事迹陈列展主馆</span>
       </div>
       <div class="tab-nav">
         <div class="tab active" @click="activeTab = 'date'">行程日期</div>
@@ -122,10 +122,10 @@
     <!-- 预约成功弹窗 -->
     <div class="modal" v-if="showModal" @click.self="closeModal">
       <div class="modal-content">
-        <div class="modal-icon">✓</div>
+        <div class="modal-icon"><img src="../imgs/预约成功.png" alt=""></div>
         <div class="modal-title">恭喜您,预约成功</div>
         <div class="modal-buttons">
-          <button class="modal-btn primary" @click="closeModal">前去查看</button>
+          <button class="modal-btn primary" @click="$router.push('/mine/book/detail')"  title="查看" >前去查看</button>
           <button class="modal-btn secondary" @click="closeModal">取消预约</button>
         </div>
       </div>
@@ -209,14 +209,18 @@ body, html {
 
 <!-- 组件样式 -->
 <style scoped>
-/* 页面容器 */
+/* 页面容器 - 全屏铺满，无内边距 */
 .booking-page {
   width: 100%;
   min-height: 100vh;
   background-color: #f5f0e6;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
 }
 
-/* 视频区域 */
+/* 视频区域 - 全屏宽度 */
 .video-section {
   position: relative;
   width: 100%;
@@ -224,7 +228,9 @@ body, html {
   overflow: hidden;
 }
 @media (min-width: 768px) {
-  .video-section { height: 360px; }
+  .video-section { 
+    height: 450px; /* 网页端视频更高，填充空间 */
+  }
 }
 .back-btn, .share-btn {
   position: absolute;
@@ -266,7 +272,7 @@ body, html {
   z-index: 9;
 }
 
-/* 标题栏 */
+/* 标题栏 - 全屏宽度 */
 .title-bar {
   width: 100%;
   background-color: #E4DFC7;
@@ -292,7 +298,7 @@ body, html {
   height: 10px;
 }
 
-/* 新增：自贡名片+抢光体验功能栏 */
+/* 自贡名片功能栏 - 全屏宽度 */
 .feature-bar {
   width: 100%;
   background-color: #E4DFC7;
@@ -330,11 +336,12 @@ body, html {
   font-size: 10px;
 }
 
+/* 优惠横幅 - 全屏宽度 */
 /* 优惠横幅 */
 .banner {
   width: 100%;
   padding: 12px 16px 22px;
-  background: url("../imgs/自贡mb.png") no-repeat center;
+  background: url("../imgs/自贡mb.png") no-repeat center/cover;
   text-align: center;
   font-size: 14px;
   color: #fff;
@@ -342,30 +349,19 @@ body, html {
   overflow: visible;
   margin-bottom: -10px;
   z-index: 2;
-}
-.banner::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 18px;
-  background: inherit;
-  border-radius: 0 0 50% 50% / 0 0 100% 100%;
-  transform: translateY(50%);
-  z-index: -1;
+  filter: opacity(0.8); /* 透明度调整，0.8是比较柔和的效果，可根据需要微调 */
 }
 .banner span {
   position: relative;
   z-index: 2;
 }
 .banner .discount {
-  color: #a62b28;
+  color: #f2ea04;
   font-weight: bold;
   margin-left: 4px;
 }
 
-/* 预约卡片 */
+/* 预约卡片 - 全屏宽度，无最大宽度限制 */
 .booking-card {
   width: 100%;
   background: #ffffff;
@@ -374,13 +370,17 @@ body, html {
   overflow: hidden;
   position: relative;
   z-index: 1;
+  flex: 1; /* 填充剩余空间，消除底部留白 */
+  display: flex;
+  flex-direction: column;
 }
-/* 预约详情头部：下移+子标题黄色背景 */
+
+/* 预约详情头部 */
 .card-header {
   background-color: #ffffff;
-  padding: 14px 16px 8px; /* 增加顶部内边距实现下移 */
+  padding: 30px 16px 8px;
   display: flex;
-  align-items: flex-end; /* 让文字靠下对齐 */
+  align-items: flex-end;
   gap: 8px;
 }
 .card-header .main-title {
@@ -392,11 +392,17 @@ body, html {
   font-size: 11px;
   font-weight: normal;
   color: #666;
-  background-color: #fff2cc; /* 黄色背景 */
-  padding: 2px 8px;
+  background-color: #fff2cc;
+  padding: 2px;
   border-radius: 4px;
-  margin-bottom: 1px; /* 对齐文字基线 */
+  margin-bottom: 1px;
 }
+.card-header .sub-header img{
+  width: 10px;
+  height: 10px;
+}
+
+/* 标签导航 */
 .tab-nav {
   display: flex;
   border-bottom: 1px solid #e5e0d5;
@@ -416,10 +422,14 @@ body, html {
   font-weight: bold;
 }
 
-/* 选择区域 */
+/* 选择区域 - 填充剩余空间 */
 .select-area {
   padding: 14px 16px;
   background-color: #f5f0e6;
+  flex: 1; /* 填充空间，消除底部留白 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 元素垂直居中，更饱满 */
 }
 .small-icon {
   width: 14px;
@@ -427,6 +437,8 @@ body, html {
   margin-left: 6px;
   vertical-align: middle;
 }
+
+/* 日期选择 */
 .date-select {
   margin-bottom: 14px;
 }
@@ -451,6 +463,7 @@ body, html {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 6px;
+  width: 100%; /* 全屏宽度 */
 }
 .date-item {
   text-align: center;
@@ -472,6 +485,8 @@ body, html {
   background: #a62b28;
   color: #ffffff;
 }
+
+/* 时间选择 */
 .time-select {
   margin-bottom: 14px;
 }
@@ -484,6 +499,7 @@ body, html {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 6px;
+  width: 100%; /* 全屏宽度 */
 }
 .time-item {
   text-align: center;
@@ -501,6 +517,8 @@ body, html {
   color: #ffffff;
   border-color: #a62b28;
 }
+
+/* 人数选择 */
 .person-select {
   margin-bottom: 0;
 }
@@ -508,6 +526,7 @@ body, html {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 6px;
+  width: 100%; /* 全屏宽度 */
 }
 .person-item {
   text-align: center;
@@ -534,6 +553,7 @@ body, html {
   padding: 10px 16px;
   background-color: #f5e6cc;
   border-top: 1px solid #e5e0d5;
+  width: 100%; /* 全屏宽度 */
 }
 .total-info .price {
   font-size: 16px;
@@ -586,7 +606,6 @@ body, html {
 .modal-icon {
   width: 50px;
   height: 50px;
-  background: #d4edda;
   color: #155724;
   border-radius: 50%;
   display: flex;
@@ -623,26 +642,72 @@ body, html {
   color: #333;
 }
 
-/* 大屏适配 */
+ /* 网页端适配 - 全屏铺满+元素放大 */
 @media (min-width: 768px) {
+  /* 选择项网格列数增加+间距加大+尺寸放大 */
   .date-grid, .time-grid, .person-grid {
-    grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 自动适配列数，最小宽度120px */
+    gap: 25px; /* 更大的间距 */
   }
-  .title-bar, .banner, .card-header, .select-area, .total-bar, .feature-bar {
-    padding: 12px 20px;
+  .date-item, .time-item, .person-item {
+    padding: 20px 0; /* 按钮更高 */
+    font-size: 18px; /* 文字更大 */
+    border-radius: 8px;
+    min-width: 120px; /* 确保每个选项足够宽 */
   }
+
+  /* 文字放大 */
+  .date-header, .time-label, .person-label {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  .card-header .main-title {
+    font-size: 22px;
+  }
+  .card-header .sub-header {
+    font-size: 16px;
+  }
+  .tab {
+    font-size: 18px;
+    padding: 15px 0;
+  }
+  .total-info .price {
+    font-size: 22px;
+  }
+  .total-info .discount-text {
+    font-size: 16px;
+  }
+
+  /* 按钮放大 */
   .booking-btn {
-    padding: 10px 18px;
+    padding: 15px 30px;
+    font-size: 18px;
+    border-radius: 8px;
   }
-  .hover-image-container {
-    height: 180px;
+  .feature-tag, .feature-label, .experience-btn {
+    font-size: 16px;
   }
-  .hover-image-container:hover {
-    height: 360px;
+  .experience-btn {
+    padding: 8px 20px;
   }
-  .hover-image {
-    height: 360px;
+  .banner {
+    font-size: 18px;
+    padding: 20px 30px 30px;
+  }
+
+  /* 播放按钮放大 */
+  .play-btn {
+    width: 100px;
+    height: 100px;
+    font-size: 36px;
+  }
+  .nav-icon {
+    width: 24px;
+    height: 24px;
+  }
+  .back-btn, .share-btn {
+    width: 48px;
+    height: 48px;
   }
 }
 </style>
