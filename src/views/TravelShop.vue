@@ -18,25 +18,37 @@
       <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMjAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2RkZGRkZCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjE4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmZmIj5DYWxpbmdyYW5kIEFydCwgVGhlIEVwbGFuY2Ugb2YgR2lyIGluIFRoZSBQb2ludGluZyBwcmltYSBpcyBsaWtlIGluIGFuIGJldHRlciBjb2xvci48L3RleHQ+PC9zdmc+" alt="全场限时折扣中" />
     </div>
 
-    <!-- 热门文创 -->
-    <div class="section">
-      <div class="section-title">
-        热门文创
-        <span class="arrow-right">→</span>
-      </div>
-      <div class="hot-items">
-        <div class="item-card" v-for="(item, index) in hotItems" :key="index">
-          <div class="rank">{{ item.rank }}</div>
-          <div class="item-header">
-            <span class="label">{{ item.label }}</span>
-            <span class="price">¥{{ item.price }}</span>
-          </div>
-          <img :src="item.img" alt="" class="item-img" />
-          <div class="item-title">{{ item.title }}</div>
-          <button class="add-btn">+</button>
+<!-- 热门文创 -->
+<div class="section">
+  <div class="section-title">
+    热门文创
+    <span class="arrow-right">→</span>
+  </div>
+  <div class="hot-items">
+    <template v-for="(item, index) in hotItems" :key="index">
+      <router-link v-if="item.title === '故居传承高粱酒'" to="/travel/shop/detail" class="item-card">
+        <div class="rank">{{ item.rank }}</div>
+        <div class="item-header">
+          <span class="label">{{ item.label }}</span>
+          <span class="price">¥{{ item.price }}</span>
         </div>
+        <img :src="item.img" alt="" class="item-img" />
+        <div class="item-title">{{ item.title }}</div>
+        <button class="add-btn">+</button>
+      </router-link>
+      <div v-else class="item-card">
+        <div class="rank">{{ item.rank }}</div>
+        <div class="item-header">
+          <span class="label">{{ item.label }}</span>
+          <span class="price">¥{{ item.price }}</span>
+        </div>
+        <img :src="item.img" alt="" class="item-img" />
+        <div class="item-title">{{ item.title }}</div>
+        <button class="add-btn">+</button>
       </div>
-    </div>
+    </template>
+  </div>
+</div>
 
     <!-- 江姐故里系列 -->
     <div class="section">
