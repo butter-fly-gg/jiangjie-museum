@@ -3,9 +3,12 @@
     <!-- 头部区域 -->
     <header class="header">
       <div class="user-avatar">
-        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuNSAxNC41YzAuNyAwIDEuMi0wLjUgMS4yLTEuMWMwLTIuNS0yLjUtMy45LTQuNS0zLjlDMTAuNiAyLjUgNy41IDMuNSA3LjUgMy41YzAtMS41IDEuNS0yLjUgMy41LTIuNUgxMS41YzIuNSAwIDQuNSAzLjUgNC41IDMuNWMwIDIuNS0yLjUgNC41LTQuNSA0LjVDMTAuNiAxOS41IDcuNSAxOC41IDcuNSAxOC41YzAtMS41IDEuNS0yLjUgMy41LTIuNVoiIGZpbGw9IiMzNDQwNTciLz48L3N2Zz4=" alt="用户" />
+        <img
+          src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuNSAxNC41YzAuNyAwIDEuMi0wLjUgMS4yLTEuMWMwLTIuNS0yLjUtMy45LTQuNS0zLjlDMTAuNiAyLjUgNy41IDMuNSA3LjUgMy41YzAtMS41IDEuNS0yLjUgMy41LTIuNUgxMS41YzIuNSAwIDQuNSAzLjUgNC41IDMuNWMwIDIuNS0yLjUgNC41LTQuNSA0LjVDMTAuNiAxOS41IDcuNSAxOC41IDcuNSAxOC41YzAtMS41IDEuNS0yLjUgMy41LTIuNVoiIGZpbGw9IiMzNDQwNTciLz48L3N2Zz4="
+          alt="用户"
+        />
       </div>
-      <div class="location">当前位置<br><span>自贡市, 沿滩区</span></div>
+      <div class="location">当前位置<br /><span>自贡市, 沿滩区</span></div>
       <div class="settings">
         <img src="../imgs/客服.png" alt="设置" class="setting-icon" />
       </div>
@@ -16,16 +19,16 @@
       <input type="text" placeholder="搜索 江姐故里教育基地景区内部 或 自贡文旅" />
       <button>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
-          <circle cx="11" cy="11" r="8"/>
-          <path d="M21 21l-4.35-4.35"/>
+          <circle cx="11" cy="11" r="8" />
+          <path d="M21 21l-4.35-4.35" />
         </svg>
       </button>
     </div>
 
     <!-- 广告横幅 -->
     <div class="banner-card">
-      <img 
-        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMjAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2Q0Yjg5MyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmZmIj5EYW1lIFNldmljZTwvdGV4dD48L3N2Zz4=" 
+      <img
+        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMjAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2RkZGRkZCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjE4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmZmIj5EYW1lIFNldmljZTwvdGV4dD48L3N2Zz4="
         alt="大美自贡"
       />
       <button class="banner-btn">立即前往</button>
@@ -36,8 +39,8 @@
 
     <!-- 地图容器 -->
     <div class="map-card">
-      <img 
-        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMzAwIDE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2VlZWIwMCIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9Ijc1IiByPSIyMCIgZmlsbD0iI2Q0MDAwMCIvPjx0ZXh0IHg9IjE1MCIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPk1hcCBTaW11bGF0aW9uPC90ZXh0Pjwvc3ZnPg==" 
+      <img
+        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMzAwIDE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2VlZWIwMCIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9Ijc1IiByPSIyMCIgZmlsbD0iI2Q0MDAwMCIvPjx0ZXh0IHg9IjE1MCIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPk1hcCBTaW11bGF0aW9uPC90ZXh0Pjwvc3ZnPg=="
         alt="江姐故里地图"
       />
       <button class="enter-guide-btn">进入导览</button>
@@ -46,22 +49,37 @@
     <!-- AR地图入口 -->
     <div class="ar-entry" @click="openAR">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-        <path d="M21 16V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8"/>
-        <path d="M3 10h18"/>
-        <path d="M16 21h-6"/>
-        <circle cx="12" cy="12" r="3"/>
+        <path d="M21 16V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8" />
+        <path d="M3 10h18" />
+        <path d="M16 21h-6" />
+        <circle cx="12" cy="12" r="3" />
       </svg>
       <span>AR实景导览</span>
     </div>
 
-    <!-- 推荐内容 -->
+    <!-- 推荐内容（可跳转） -->
     <div class="section-title">推荐</div>
     <div class="recommend-grid">
-      <div class="card" v-for="item in recommendList" :key="item.id">
+      <!-- 故里游玩路线规划 -->
+      <div class="card">
         <div class="card-img-placeholder"></div>
-        <div class="card-title">{{ item.title }}</div>
-        <div class="card-desc">{{ item.desc }}</div>
+        <div class="card-title">故里游玩<br />路线规划</div>
+        <div class="card-desc">定制专属行程</div>
       </div>
+
+      <!-- 现场公益讲解 -->
+      <router-link to="/travel/volunteer" class="card">
+        <div class="card-img-placeholder"></div>
+        <div class="card-title">现场公益<br />讲解</div>
+        <div class="card-desc">专业志愿者服务</div>
+      </router-link>
+
+      <!-- 文创产品选购 -->
+      <router-link to="/travel/shop" class="card">
+        <div class="card-img-placeholder"></div>
+        <div class="card-title">文创产品<br />选购</div>
+        <div class="card-desc">红色文化纪念品</div>
+      </router-link>
     </div>
 
     <!-- 全景展示 -->
@@ -72,27 +90,51 @@
         <div class="pano-name">全景场景 {{ i }}</div>
       </div>
     </div>
+
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+      <div class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+        <span>首页</span>
+      </div>
+      <div class="nav-item active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c43e3a" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+        <span>导览</span>
+      </div>
+      <div class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+        <span>活动</span>
+      </div>
+      <div class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+        <span>我的</span>
+      </div>
+    </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'TravelPage',
-  data() {
-    return {
-      recommendList: [
-        { id: 1, title: '江姐故居', desc: '了解革命先烈的生平事迹' },
-        { id: 2, title: '红梅广场', desc: '纪念江姐精神的主题广场' },
-        { id: 3, title: '教育展馆', desc: '沉浸式红色教育体验' },
-        { id: 4, title: '烈士陵园', desc: '缅怀英烈，致敬英雄' }
-      ]
-    }
-  },
-  methods: {
-    openAR() {
-      alert('AR实景导览功能暂未开放')
-    }
-  }
+<script setup>
+//import { ref } from 'vue'
+
+// 方法
+const openAR = () => {
+  alert('AR实景导览功能暂未开放')
 }
 </script>
 
@@ -227,7 +269,7 @@ export default {
   height: 20px;
 }
 
-/* === 推荐卡片 === */
+/* === 推荐卡片（支持 router-link）=== */
 .recommend-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -240,6 +282,12 @@ export default {
   padding: 12px;
   text-align: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s;
+}
+.card:hover {
+  transform: translateY(-2px);
 }
 .card-img-placeholder {
   width: 100%;
@@ -253,6 +301,7 @@ export default {
   font-size: 14px;
   margin-bottom: 4px;
   color: #333;
+  line-height: 1.3;
 }
 .card-desc {
   font-size: 12px;
@@ -282,5 +331,36 @@ export default {
 .pano-name {
   font-size: 13px;
   color: #333;
+}
+
+/* === 底部导航 === */
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 12px;
+  background: #f5f0e6;
+  border-top: 1px solid #ddd;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  border-radius: 20px 20px 0 0;
+}
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: #999;
+  font-size: 12px;
+  cursor: pointer;
+}
+.nav-item.active {
+  color: #c43e3a;
+}
+.nav-item svg {
+  width: 20px;
+  height: 20px;
 }
 </style>
