@@ -70,6 +70,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router' 
 
 // 数据定义
 const hotItems = ref([
@@ -108,6 +109,13 @@ const seriesItems = ref([
     img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMjAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2Q0Yjg5MyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmZmIj5KZW50cm9sIEFydCwgVGhlIEVwbGFuY2Ugb2YgR2lyIGluIFRoZSBQb2ludGluZyBwcmltYSBpcyBsaWtlIGluIGFuIGJldHRlciBjb2xvci48L3RleHQ+PC9zdmc+'
   }
 ])
+
+const router = useRouter()
+
+const goBack = () => {
+  router.push('/travel')
+}
+
 </script>
 
 <style scoped>

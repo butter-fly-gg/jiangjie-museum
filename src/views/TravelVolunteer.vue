@@ -2,6 +2,12 @@
   <div class="travel-volunteer-page">
     <!-- 头部区域 -->
     <header class="header">
+      <div class="back-btn" @click="goBack">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7l7-7"/>
+        </svg>
+      </div>
+
       <div class="user-avatar">
         <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuNSAxNC41YzAuNyAwIDEuMi0wLjUgMS4yLTEuMWMwLTIuNS0yLjUtMy45LTQuNS0zLjlDMTAuNiAyLjUgNy41IDMuNSA3LjUgMy41YzAtMS45IDEuNS0yLjUgMy41LTIuNUgxMS41YzIuNSAwIDQuNSAzLjUgNC41IDMuNWMwIDIuNS0yLjUgNC41LTQuNSA0LjVDMTAuNiAxOS41IDcuNSAxOC41IDcuNSAxOC41YzAtMS41IDEuNS0yLjUgMy41LTIuNVoiIGZpbGw9IiMzNDQwNTciLz48L3N2Zz4=" alt="用户" />
       </div>
@@ -90,7 +96,12 @@
 </template>
 
 <script setup>
-// 无复杂逻辑，仅展示
+import { useRouter } from 'vue-router' 
+
+const router = useRouter()
+const goBack = () => {
+  router.push('/travel') 
+}
 </script>
 
 <style scoped>
@@ -259,5 +270,15 @@
 .join-btn.disabled {
   background: #ccc;
   cursor: not-allowed;
+}
+.back-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 </style>
