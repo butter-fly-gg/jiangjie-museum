@@ -1,366 +1,434 @@
 <template>
   <div class="travel-page">
-    <!-- 头部区域 -->
+    <!-- 1. 头部区域 -->
     <header class="header">
-      <div class="user-avatar">
-        <img
-          src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuNSAxNC41YzAuNyAwIDEuMi0wLjUgMS4yLTEuMWMwLTIuNS0yLjUtMy45LTQuNS0zLjlDMTAuNiAyLjUgNy41IDMuNSA3LjUgMy41YzAtMS41IDEuNS0yLjUgMy41LTIuNUgxMS41YzIuNSAwIDQuNSAzLjUgNC41IDMuNWMwIDIuNS0yLjUgNC41LTQuNSA0LjVDMTAuNiAxOS41IDcuNSAxOC41IDcuNSAxOC41YzAtMS41IDEuNS0yLjUgMy41LTIuNVoiIGZpbGw9IiMzNDQwNTciLz48L3N2Zz4="
-          alt="用户"
-        />
+      <div class="user-avatar" @click="goToMine">
+        <img src="../imgs/图层 26.png" alt="用户" />
       </div>
-      <div class="location">当前位置<br /><span>自贡市, 沿滩区</span></div>
-      <div class="settings">
-        <img src="../imgs/客服.png" alt="设置" class="setting-icon" />
+      
+      <div class="location-info">
+        <div class="location-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#c43e3a" stroke="none">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+          </svg>
+          <span>当前位置</span>
+        </div>
+        <div class="location-text">自贡市，沿滩区</div>
+      </div>
+
+      <div class="header-menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
       </div>
     </header>
 
-    <!-- 搜索框 -->
-    <div class="search-bar">
-      <input type="text" placeholder="搜索 江姐故里教育基地景区内部 或 自贡文旅" />
-      <button>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
-          <circle cx="11" cy="11" r="8" />
-          <path d="M21 21l-4.35-4.35" />
-        </svg>
-      </button>
+    <!-- 2. 搜索框 -->
+    <div class="search-container">
+      <div class="search-bar">
+        <input type="text" placeholder="搜索 江姐故里教育基地景区内部 或 自贡文旅" />
+        <button class="search-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
     </div>
 
-    <!-- 广告横幅 -->
+    <!-- 3. 广告横幅 -->
     <div class="banner-card">
       <img
-        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMjAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2RkZGRkZCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjE4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmZmIj5EYW1lIFNldmljZTwvdGV4dD48L3N2Zz4="
-        alt="大美自贡"
-      />
+        src="../imgs/t大美自贡.png" alt="大美自贡" class="banner-img"/>
+      <div class="banner-content">
+        <h2 class="banner-title">大美自贡</h2>
+        <p class="banner-subtitle">定制属于您的个性化出游自贡行程</p>
+      </div>
       <button class="banner-btn">立即前往</button>
     </div>
 
-    <!-- 导览区域标题 -->
+    <!-- 4. 导览入口 -->
     <div class="section-title">江姐故里园区导览</div>
-
-    <!-- 地图容器 -->
     <div class="map-card">
-      <img
-        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMzAwIDE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2VlZWIwMCIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9Ijc1IiByPSIyMCIgZmlsbD0iI2Q0MDAwMCIvPjx0ZXh0IHg9IjE1MCIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPk1hcCBTaW11bGF0aW9uPC90ZXh0Pjwvc3ZnPg=="
-        alt="江姐故里地图"
-      />
-      <button class="enter-guide-btn">进入导览</button>
+      <img src="../imgs/t园区导览.png" alt="导览" />
+       <button class="enter-guide-btn">进入导览</button>
     </div>
 
-    <!-- AR地图入口 -->
-    <div class="ar-entry" @click="openAR">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-        <path d="M21 16V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8" />
-        <path d="M3 10h18" />
-        <path d="M16 21h-6" />
-        <circle cx="12" cy="12" r="3" />
+    <!-- 5. 推荐功能模块 (仿截图布局) -->
+    <div class="recommend-section">
+      <div class="rec-grid">
+        <!-- 左侧大卡片：故里游玩路线规划 -->
+        <div class="rec-card large-card">
+          <img src="../imgs/t故里游玩路线规划.png" alt="路线规划" class="card-bg" />
+          <div class="card-overlay">
+          </div>
+        </div>
+
+        <!-- 右侧小卡片组 -->
+        <div class="rec-cards-right">
+          <!-- 上方：现场公益讲解 -->
+          <div class="rec-card small-card" @click="goToVolunteer">
+            <img src="../imgs/t现场公益讲解.png" alt="讲解" class="card-bg" />
+          </div>
+          <!-- 下方：文创产品选购 -->
+          <div class="rec-card small-card" @click="goToShop">
+            <img src="../imgs/t文创产品选购.png" alt="文创" class="card-bg" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. 全景故里 -->
+    <div class="section-title panorama-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#c43e3a" stroke="none" style="margin-right: 8px; vertical-align: middle;">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
       </svg>
-      <span>AR实景导览</span>
+      全景故里
     </div>
-
-    <!-- 推荐内容（可跳转） -->
-    <div class="section-title">推荐</div>
-    <div class="recommend-grid">
-      <!-- 故里游玩路线规划 -->
-      <div class="card">
-        <div class="card-img-placeholder"></div>
-        <div class="card-title">故里游玩<br />路线规划</div>
-        <div class="card-desc">定制专属行程</div>
-      </div>
-
-      <!-- 现场公益讲解 -->
-      <router-link to="/travel/volunteer" class="card">
-        <div class="card-img-placeholder"></div>
-        <div class="card-title">现场公益<br />讲解</div>
-        <div class="card-desc">专业志愿者服务</div>
-      </router-link>
-
-      <!-- 文创产品选购 -->
-      <router-link to="/travel/shop" class="card">
-        <div class="card-img-placeholder"></div>
-        <div class="card-title">文创产品<br />选购</div>
-        <div class="card-desc">红色文化纪念品</div>
-      </router-link>
-    </div>
-
-    <!-- 全景展示 -->
-    <div class="section-title">全景展示</div>
-    <div class="panorama-list">
-      <div class="pano-item" v-for="i in 3" :key="i">
-        <div class="pano-thumb-placeholder"></div>
-        <div class="pano-name">全景场景 {{ i }}</div>
+    
+    <div class="panorama-container">
+      <img src="https://images.unsplash.com/photo-1444491741275-3747c53c99b4?q=80&w=2070&auto=format&fit=crop" alt="全景" class="pano-img" />
+      <div class="pano-footer">
+        <div class="update-info">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          <span>每日更新实况</span>
+        </div>
       </div>
     </div>
 
-    <!-- 底部导航 -->
-    <div class="bottom-nav">
-      <div class="nav-item">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
-          <path d="M12 2L2 7l10 5 10-5-10-5z" />
-          <path d="M2 17l10 5 10-5" />
-          <path d="M2 12l10 5 10-5" />
-        </svg>
-        <span>首页</span>
-      </div>
-      <div class="nav-item active">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c43e3a" stroke-width="2">
-          <path d="M12 2L2 7l10 5 10-5-10-5z" />
-          <path d="M2 17l10 5 10-5" />
-          <path d="M2 12l10 5 10-5" />
-        </svg>
-        <span>导览</span>
-      </div>
-      <div class="nav-item">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
-          <path d="M12 2L2 7l10 5 10-5-10-5z" />
-          <path d="M2 17l10 5 10-5" />
-          <path d="M2 12l10 5 10-5" />
-        </svg>
-        <span>活动</span>
-      </div>
-      <div class="nav-item">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
-          <path d="M12 2L2 7l10 5 10-5-10-5z" />
-          <path d="M2 17l10 5 10-5" />
-          <path d="M2 12l10 5 10-5" />
-        </svg>
-        <span>我的</span>
-      </div>
-    </div>
+    <!-- 底部留白，防止被导航栏遮挡 -->
+    <div style="height: 60px;"></div>
   </div>
 </template>
 
 <script setup>
-//import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-// 方法
-const openAR = () => {
-  alert('AR实景导览功能暂未开放')
+const router = useRouter()
+
+// 跳转到个人中心页面
+const goToMine = () => {
+  router.push({ name: 'Mine' })
+}
+
+// 跳转到志愿者讲解页面
+const goToVolunteer = () => {
+  router.push({ name: 'TravelVolunteer' })
+}
+
+// 跳转到文创商店页面
+const goToShop = () => {
+  router.push({ name: 'TravelShop' })
 }
 </script>
 
 <style scoped>
-/* 继承 MinePage 的全局风格 */
 .travel-page {
   min-height: 100vh;
-  background-color: #f5f0e6; /* ← 关键：统一背景色 */
+  background-color: #fdf6f0; 
   font-family: 'Microsoft Yahei', sans-serif;
   padding: 16px;
   padding-bottom: calc(80px + env(safe-area-inset-bottom));
 }
 
-/* === 头部 === */
+/* === 头部 & 搜索 & Banner 样式 (保持上一轮代码) === */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  background: linear-gradient(to right, #fff5f0, transparent);
+  padding: 10px 5px;
+  border-radius: 12px;
 }
 .user-avatar img {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  object-fit: cover;
 }
-.location {
-  font-size: 14px;
-  text-align: center;
-  color: #333;
+.location-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
 }
-.location span {
+.location-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-size: 12px;
   color: #666;
+  margin-bottom: 2px;
 }
-.setting-icon {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
+.location-text {
+  font-size: 15px;
+  font-weight: bold;
+  color: #333;
+}
+.header-menu svg { cursor: pointer; opacity: 0.8; }
+
+.search-container {
+  margin-bottom: 16px;
 }
 
-/* === 搜索框 === */
+/* 1. 搜索框容器：确保 Flex 垂直居中生效 */
 .search-bar {
   display: flex;
-  margin-bottom: 16px;
-  background: rgba(255, 255, 255, 0.8); /* ← 半透明背景 */
-  border-radius: 20px;
-  overflow: hidden;
+  align-items: center; 
+  justify-content: space-between; 
+  height: 36px;
+  border-radius: 18px;
+  padding: 0 12px; /* 左右内边距，上下为 0 */
+  background: rgba(255, 255, 255, 0.9); 
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box; 
 }
+
 .search-bar input {
-  flex: 1;
-  padding: 8px 16px;
+  flex: 1; 
   border: none;
   outline: none;
-  font-size: 14px;
   background: transparent;
+  font-size: 14px;
+  color: #333;
+  height: 100%; 
+  line-height: normal; 
+  padding: 0 !important;
+  margin: 0;
+  -webkit-appearance: none; 
+  appearance: none;
+  display: block; 
 }
-.search-bar button {
-  width: 40px;
+
+.search-bar input::placeholder {
+  color: #999;
+}
+
+.search-btn {
   background: transparent;
   border: none;
   cursor: pointer;
+  padding: 0;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%; 
+  flex-shrink: 0; 
 }
 
-/* === 通用卡片样式（对齐 MinePage）=== */
-.banner-card,
+.search-btn svg {
+  width: 18px; 
+  height: 18px;
+  stroke: #999;
+}
+
+.banner-card {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 20px rgba(196, 62, 58, 0.15);
+}
+.banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.9); 
+}
+.banner-content {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 2;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+.banner-title {
+  font-size: 50px;
+  margin-top: 45px;
+  font-weight: bold;
+  background: linear-gradient(to bottom, #ffd700, #fdb931);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: "Songti SC", "SimSun", serif;
+  letter-spacing: 2px;
+}
+.banner-subtitle {
+  font-size: 20px;
+  margin-top: 10px;
+  color: #eee;
+  font-weight: normal;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+.banner-btn {
+  position: absolute;
+  bottom: 25px;
+  right: 16px;
+  background: #fff;
+  color: #c43e3a;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* === 通用标题 === */
+.section-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin: 24px 0 12px;
+  padding-left: 8px;
+  border-left: 4px solid #c43e3a;
+  display: flex;
+  align-items: center;
+}
+
+/* === 地图卡片 === */
 .map-card {
   position: relative;
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  height: 800px;
 }
-.banner-card img,
-.map-card img {
-  width: 100%;
-  display: block;
-  height: auto;
-}
-
-/* === 按钮 === */
-.banner-btn,
 .enter-guide-btn {
   position: absolute;
-  background: #c43e3a; /* ← 使用 MinePage 的主色 */
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #c43e3a;
   color: white;
   border: none;
   border-radius: 20px;
+  padding: 10px 32px;
+  font-size: 28px;
   font-weight: bold;
-  z-index: 2;
-}
-.banner-btn {
-  bottom: 10px;
-  right: 10px;
-  padding: 4px 12px;
-  font-size: 12px;
-}
-.enter-guide-btn {
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 6px 20px;
-  font-size: 14px;
-}
-
-/* === 区块标题（对齐 MinePage 的 tab 风格）=== */
-.section-title {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  margin: 20px 0 12px;
-  padding-left: 4px;
-  border-left: 3px solid #c43e3a; /* ← 左侧色条，呼应 MinePage 主色 */
-}
-
-/* === AR入口 === */
-.ar-entry {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: #c43e3a;
-  color: white;
-  padding: 10px;
-  border-radius: 12px;
-  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(196, 62, 58, 0.3);
   cursor: pointer;
-  font-size: 14px;
-}
-.ar-entry svg {
-  width: 20px;
-  height: 20px;
 }
 
-/* === 推荐卡片（支持 router-link）=== */
-.recommend-grid {
+/* === 5. 推荐功能模块 (核心修改) === */
+.recommend-section {
+  margin-bottom: 24px;
+}
+
+.rec-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 16px;
-  margin-bottom: 20px;
+  grid-template-columns: 5.5fr 4.5fr; /* 两列布局 */
+  gap: 12px;
 }
-.card {
-  background: rgba(255, 255, 255, 0.8);
+
+/* 左侧大卡片 */
+.large-card {
+  grid-row: span 2; /* 占据两行高度 */
   border-radius: 12px;
-  padding: 12px;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s;
-}
-.card:hover {
-  transform: translateY(-2px);
-}
-.card-img-placeholder {
-  width: 100%;
-  height: 80px;
-  background: #eee;
-  border-radius: 8px;
-  margin-bottom: 8px;
-}
-.card-title {
-  font-weight: bold;
-  font-size: 14px;
-  margin-bottom: 4px;
-  color: #333;
-  line-height: 1.3;
-}
-.card-desc {
-  font-size: 12px;
-  color: #888;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 3/2; /* 竖长方形比例 */
 }
 
-/* === 全景展示 === */
-.panorama-list {
-  display: flex;
-  gap: 16px;
-  overflow-x: auto;
-  padding-bottom: 10px;
-  -webkit-overflow-scrolling: touch;
-}
-.pano-item {
-  flex: 0 0 auto;
-  text-align: center;
-  min-width: 90px;
-}
-.pano-thumb-placeholder {
-  width: 90px;
-  height: 90px;
-  background: #eee;
-  border-radius: 10px;
-  margin-bottom: 8px;
-}
-.pano-name {
-  font-size: 13px;
-  color: #333;
-}
-
-/* === 底部导航 === */
-.bottom-nav {
-  display: flex;
-  justify-content: space-around;
-  padding: 12px;
-  background: #f5f0e6;
-  border-top: 1px solid #ddd;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  border-radius: 20px 20px 0 0;
-}
-.nav-item {
+/* 右侧容器 */
+.rec-cards-right {
   display: flex;
   flex-direction: column;
+  gap: 12px;
+}
+
+/* 右侧小卡片 */
+.small-card {
+  flex: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 3/1.2; /* 横长方形比例 */
+}
+
+/* 卡片通用图片样式 */
+.card-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+/* 卡片悬停效果 */
+.large-card:hover .card-bg,
+.small-card:hover .card-bg {
+  transform: scale(1.05);
+}
+
+.card-overlay h3 {
+  font-size: 15px;
+  font-weight: bold;
+  margin: 0;
+  line-height: 1.4;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* === 6. 全景故里 === */
+.panorama-title {
+  margin-top: 10px;
+}
+
+.panorama-container {
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.pano-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+.pano-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 8px 12px;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.update-info {
+  display: flex;
   align-items: center;
-  gap: 4px;
-  color: #999;
+  gap: 6px;
+  color: rgba(255,255,255,0.9);
   font-size: 12px;
-  cursor: pointer;
-}
-.nav-item.active {
-  color: #c43e3a;
-}
-.nav-item svg {
-  width: 20px;
-  height: 20px;
+  background: rgba(0,0,0,0.3);
+  padding: 4px 8px;
+  border-radius: 12px;
+  backdrop-filter: blur(4px);
 }
 </style>
