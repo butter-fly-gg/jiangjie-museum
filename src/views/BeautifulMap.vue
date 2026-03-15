@@ -57,7 +57,7 @@
       <div class="map-visual">
         <div class="map-background">
           <!-- 使用你的自贡背景图作为地图底图 -->
-          <img :src="require('@/assets/images/beautiful/travel-sky.jpg')" alt="地图底图" class="map-image" />
+          <img :src="require('@/assets/images/beautiful/bg-map.jpg')" alt="地图底图" class="map-image" />
           
           <!-- 路径线条 -->
           <svg class="route-path" viewBox="0 0 400 600" preserveAspectRatio="none">
@@ -296,7 +296,7 @@ export default {
 .stat-value {
   font-size: 20px;
   font-weight: 800;
-  color: #4CAF50;
+  color: #b01a1a;
 }
 
 .stat-label {
@@ -325,8 +325,8 @@ export default {
 
 .transport-btn.active,
 .transport-btn:hover {
-  border-color: #4CAF50;
-  background: #4CAF50;
+  border-color: #a02424;
+  background: #a72020;
   color: white;
 }
 
@@ -390,7 +390,7 @@ export default {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #4CAF50;
+  background: #b22e2e;
   color: white;
   display: flex;
   align-items: center;
@@ -428,19 +428,19 @@ export default {
   height: 56px;
   border-radius: 16px;
   border: none;
-  background: linear-gradient(135deg, #4CAF50, #2196F3);
+  background: linear-gradient(135deg, #7f242c, #922037);
   color: white;
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 1px;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 8px 20px rgba(188, 27, 52, 0.3);
   transition: all 0.3s ease;
 }
 
 .nav-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 12px 24px rgba(176, 46, 46, 0.4);
 }
 
 .nav-button:active {

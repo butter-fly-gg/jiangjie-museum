@@ -1,13 +1,6 @@
 <template>
   <div class="ar-page">
-    <!-- 模拟状态栏 -->
-    <div class="status-bar">
-      <div class="signal">●●●○○</div>
-      <div class="carrier">VIRGIN</div>
-      <div class="time">4:21 PM</div>
-      <div class="battery">95%</div>
-    </div>
-
+  
     <!-- 顶部导航栏 -->
     <div class="header">
       <button class="menu-btn" @click="toggleSidebar">
@@ -30,9 +23,9 @@
 
     <!-- 顶部提示文字 -->
     <div class="top-info">
-      <div class="vr-status">VR体验 进行中</div>
+      <div class="vr-status">VR 体验 进行中</div>
       <div class="description">
-        抗日战争全面爆发后，为疏散转移，南岸中学迁到将近，江竹筠并没有随学校迁移。1938年，她主动订阅《新华日报》，开始认识了解共产党。
+        抗日战争全面爆发后，为疏散转移，南岸中学迁到将近，江竹筠并没有随学校迁移。1938 年，她主动订阅《新华日报》，开始认识了解共产党。
       </div>
     </div>
 
@@ -48,8 +41,8 @@
     <div class="image-section">
       <div class="image-row">
         <div class="image-item">
-          <img src="@/assets/images/beautiful/wananqiao.jpg" alt="1946年的万安桥" class="historical-image" />
-          <div class="image-caption">• 1946年的万安桥</div>
+          <img src="@/assets/images/beautiful/wananqiao.jpg" alt="1946 年的万安桥" class="historical-image" />
+          <div class="image-caption">• 1946 年的万安桥</div>
         </div>
         <div class="image-item">
           <img src="@/assets/images/beautiful/mountain-river.jpg" alt="山水地貌图" class="historical-image" />
@@ -89,16 +82,14 @@ const router = useRouter();
 
 const toggleSidebar = () => {
   console.log('打开侧边栏');
-  // 这里可以添加侧边栏逻辑
 };
 
 const closePage = () => {
-  router.go(-1); // 返回上一页
+  router.go(-1);
 };
 
 const scrollDown = () => {
   console.log('滑动页面');
-  // 这里可以添加滚动逻辑
 };
 
 const addToCollection = () => {
@@ -118,21 +109,6 @@ const addToCollection = () => {
   padding: 0;
   margin: 0;
   position: relative;
-}
-
-.status-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  font-size: 12px;
-  color: white;
-  background: rgba(0, 0, 0, 0.3);
-}
-
-.signal, .carrier, .time, .battery {
-  display: flex;
-  align-items: center;
 }
 
 .header {
@@ -186,6 +162,7 @@ const addToCollection = () => {
   align-items: center;
   justify-content: center;
   gap: 15px;
+  flex-wrap: wrap;
 }
 
 .main-title {
@@ -193,7 +170,8 @@ const addToCollection = () => {
   font-family: 'KaiTi', 'SimSun', serif;
   font-weight: bold;
   margin: 0;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  color: white;                    /* ✅ 新增：白色文字 */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);  /* ✅ 调整阴影为深色，白色字更清晰 */
 }
 
 .chapter-tag {
@@ -215,10 +193,12 @@ const addToCollection = () => {
   display: flex;
   gap: 20px;
   margin-bottom: 15px;
+  flex-wrap: wrap;
 }
 
 .image-item {
   flex: 1;
+  min-width: 140px;
 }
 
 .historical-image {
@@ -278,59 +258,93 @@ const addToCollection = () => {
   color: #ccc;
 }
 
+/* ========== 底部按钮区域 - 修复重点 ========== */
 .bottom-section {
-  padding: 30px 20px;
+  padding: 30px 20px 50px;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .collect-btn {
-  width: 60px;
-  height: 60px;
+  /* 修改为横向长条按钮 */
+  width: 280px;
+  height: 56px;
   background: #B22234;
   border: none;
-  border-radius: 12px;
+  border-radius: 28px;
   color: white;
-  font-size: 24px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(178, 34, 52, 0.4);
-  position: relative;
+  box-shadow: 0 4px 16px rgba(178, 34, 52, 0.5);
+  
+  /* 关键：Flex 布局实现横向居中 */
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 10px;
+  gap: 10px;
+  
+  /* 过渡动画 */
+  transition: all 0.3s ease;
+  margin: 0 auto;
+}
+
+.collect-btn:hover {
+  background: #c62828;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(178, 34, 52, 0.6);
+}
+
+.collect-btn:active {
+  transform: translateY(0);
 }
 
 .plus-icon {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: bold;
+  line-height: 1;
 }
 
 .collect-text {
-  font-size: 14px;
+  /* 关键：文字横向居中显示 */
+  font-size: 16px;
   color: white;
+  white-space: nowrap;      /* 不换行 */
+  text-align: center;       /* 文字居中 */
+  font-weight: 500;
+  letter-spacing: 1px;
 }
 
-/* 响应式设计 */
+/* ========== 响应式设计 ========== */
 @media (min-width: 768px) {
   .ar-page {
-    max-width: 400px;
-    margin: 0 auto;
+    /* 移除 max-width: 400px; */
+    padding: 0 40px;     /* 增加左右内边距 */
   }
   
   .main-title {
-    font-size: 60px;
+    font-size: 72px;     /* 更大的标题 */
   }
   
   .image-row {
-    gap: 30px;
+    gap: 40px;
   }
   
   .historical-image {
-    max-width: 200px;
+    max-width: 350px;    /* 更大的图片 */
   }
   
   .large-historical-image {
-    max-width: 400px;
+    max-width: 600px;    /* 更大的图片 */
+  }
+  
+  .collect-btn {
+    width: 400px;        /* 更宽的按钮 */
+    height: 64px;
+  }
+  
+  .collect-text {
+    font-size: 20px;
   }
 }
 </style>
