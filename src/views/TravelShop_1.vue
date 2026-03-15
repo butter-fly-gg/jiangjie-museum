@@ -14,26 +14,33 @@
     </header>
 
     <!-- 主图区域 -->
-    <div class="main-image">
-      <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMjAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2RkZGRkZCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjE4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmZmIj5KZW50cm9sIEFydCwgVGhlIEVwbGFuY2Ugb2YgR2lyIGluIFRoZSBQb2ludGluZyBwcmltYSBpcyBsaWtlIGluIGFuIGJldHRlciBjb2xvci48L3RleHQ+PC9zdmc+" alt="故居传承高粱酒" />
+    <div class="main-image" v-if="!loading && product">
+      <img :src="product.image" :alt="product.name" />
+    </div>
+    
+    <!-- 加载状态 -->
+    <div class="main-image loading" v-if="loading">
+      <div>加载中...</div>
     </div>
 
     <!-- 商品信息 -->
-    <div class="product-info">
-      <div class="product-title">故居传承高粱酒</div>
+    <div class="product-info" v-if="!loading && product">
+      <div class="product-title">{{ product.name }}</div>
       <div class="rating">
         <span class="stars">
-          <span class="star active"></span>
-          <span class="star active"></span>
-          <span class="star active"></span>
-          <span class="star active"></span>
-          <span class="star inactive"></span>
+          <span class="star active" v-for="n in Math.floor(product.rating || 0)" :key="n"></span>
+          <span class="star inactive" v-for="n in (5 - Math.floor(product.rating || 0))" :key="n"></span>
         </span>
-        <span class="sales">已售999+</span>
+        <span class="sales">已售{{ product.sales }}+</span>
       </div>
       <div class="description">
-        江姐故居这片被红色精神深深滋养的田地上，我们精选优质红高粱，历经多道工序，匠心打造江姐故居高粱酒这一大特色产品，实现味蕾与心灵的双重盛宴。同时，以实用性、生活性为目的，研发生活类文创产品，为拥有者的生活空间增添一抹独特的红色魅力。
+        {{ product.description }}
       </div>
+    </div>
+    
+    <!-- 加载状态 -->
+    <div class="loading" v-if="loading">
+      <div>加载中...</div>
     </div>
 
     <!-- 评价按钮 -->
@@ -55,36 +62,85 @@
     </div>
 
     <!-- 口味选择 -->
-    <div class="flavor-select">
-      <span class="label">口味精选(12)</span>
+    <div class="flavor-select" v-if="!loading && product && product.flavors">
+      <span class="label">口味精选({{ product.flavors.length }})</span>
       <select v-model="selectedFlavor">
         <option value="">请选择口味</option>
-        <option value="原味">原味</option>
-        <option value="陈酿">陈酿</option>
-        <option value="特制">特制</option>
+        <option v-for="flavor in product.flavors" :key="flavor.name" :value="flavor.name">
+          {{ flavor.name }}
+        </option>
       </select>
     </div>
 
     <!-- 价格与按钮 -->
-    <div class="price-section">
-      <div class="price">¥399.00</div>
+    <div class="price-section" v-if="!loading && product">
+      <div class="price">¥{{ product.price }}.00</div>
       <div class="discount-tips">完成·投票连看 喜欢可获得优惠</div>
-      <button class="buy-btn">立即购入</button>
+      <button class="buy-btn" @click="buyNow">立即购入</button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { shopAPI } from '@/api'
 
 // 数据定义
 const quantity = ref(1)
 const selectedFlavor = ref('')
+const product = ref(null)
+const loading = ref(true)
+
+const route = useRoute()
+import imgWine from '@/imgs/s高粱酒1.png' 
+// 获取商品详情
+const fetchProductDetail = async () => {
+  const productId = route.params.id || '65f1234567890123456789ab' // 示例ID
+  try {
+    const response = await shopAPI.getProductById(productId)
+    if (response.success) {
+      product.value = response.data
+    }
+  } catch (error) {
+    console.error('获取商品详情失败:', error)
+    // 使用默认数据
+    product.value = {
+      name: '故居传承高粱酒',
+      description: '江姐故居这片被红色精神深深滋养的田地上，我们精选优质红高粱，历经多道工序，匠心打造江姐故居高粱酒这一大特色产品，实现味蕾与心灵的双重盛宴。同时，以实用性、生活性为目的，研发生活类文创产品，为拥有者的生活空间增添一抹独特的红色魅力。',
+      price: 399,
+      flavors: [
+        { name: '原味', description: '传统原味' },
+        { name: '陈酿', description: '陈年佳酿' },
+        { name: '特制', description: '特别调制' }
+      ],
+      rating: 4.9,
+      sales: 999,
+      image: imgWine
+    }
+  } finally {
+    loading.value = false
+  }
+}
+
+// 立即购买
+const buyNow = () => {
+  if (!selectedFlavor.value) {
+    alert('请选择口味')
+    return
+  }
+  alert(`已添加到购物车：${product.value?.name} x ${quantity.value}，口味：${selectedFlavor.value}`)
+}
 
 // 方法
 const goBack = () => {
   window.history.back()
 }
+
+// 组件挂载时获取数据
+onMounted(() => {
+  fetchProductDetail()
+})
 </script>
 
 <style scoped>
@@ -130,7 +186,7 @@ const goBack = () => {
 /* === 主图 === */
 .main-image {
   width: 100%;
-  height: 400px;
+  height: 800px;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
