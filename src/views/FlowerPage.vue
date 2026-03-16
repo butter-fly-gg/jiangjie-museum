@@ -4,7 +4,7 @@
     <div class="header">
       <div class="tab-nav">
         <div class="tab" :class="{active: activeTab === 'follow'}" @click="switchTab('follow')">关注</div>
-        <div class="tab" :class="{active: activeTab === 'recommend'}" @click="switchTab('recommend')">推荐</div>
+        <div class="tab" :class="{active: activeTab === 'reco`mmend'}" @click="switchTab('recommend')">推荐</div>
         <div class="tab" :class="{active: activeTab === 'hot'}" @click="switchTab('hot')">热门</div>
       </div>
       <button class="close-btn" @click="$router.back()">×</button>
@@ -13,7 +13,7 @@
     <!-- 提示文字 -->
     <div class="tip">^上滑查看更多动态</div>
 
-    <!-- 博主头像栏 - 新增更多博主 -->
+    <!-- 博主头像栏 -->
     <div class="blogger-bar">
       <div class="blogger-item" v-for="blogger in bloggers" :key="blogger.id" @click="goToBlogger(blogger.id)">
         <div class="avatar-container">
@@ -41,7 +41,6 @@
                 <span class="blogger-name">{{ item.blogger.name }}</span>
                 <span v-if="item.blogger.id === 1" class="official-tag">{{ item.blogger.officialLabel }}</span>
               </div>
-              <!-- 调整：发布时间与地点移到名字下方 -->
               <div class="post-info">
                 <span>{{ item.postTime }}</span>
                 <span>发布于 {{ item.location }}</span>
@@ -53,7 +52,7 @@
           </button>
         </div>
 
-        <!-- 博客内容：文字悬浮在图片上 -->
+        <!-- 博客内容 -->
         <div class="feed-content">
           <div class="cover-container">
             <img :src="item.cover" alt="动态封面" class="feed-cover">
@@ -61,12 +60,10 @@
               <img src="../imgs/播放.png" alt="播放" class="play-icon">
               <span>{{ item.updateLabel }}</span>
             </div>
-            <!-- 调整：左下角标题去掉背景 -->
             <div class="floating-title">
               {{ item.title }}
             </div>
           </div>
-          <!-- 调整：统计数据与标题在同一行 -->
           <div class="content-footer">
             <span class="floating-title-text">{{ item.title }}</span>
             <div class="feed-stats">
@@ -94,6 +91,59 @@
       <div class="loading" v-if="loading && activeTab !== 'follow'">加载中...</div>
       <div class="no-more" v-if="!loading && !hasMore && activeTab !== 'follow'">已加载全部</div>
     </div>
+
+    <!-- 左下角固定发布按钮 -->
+    <div class="publish-btn" @click="openPublishModal">
+      <img src="../imgs/导航栏（❀）.png" alt="发布博客" class="publish-icon">
+    </div>
+
+    <!-- 撰写博客弹窗 -->
+    <div class="modal-mask" v-if="showPublishModal" @click="closePublishModal">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>撰写我的博客</h3>
+          <button class="close-modal" @click="closePublishModal">×</button>
+        </div>
+        <div class="modal-body">
+          <form @submit.prevent="submitBlog">
+            <div class="form-item">
+              <label>标题</label>
+              <input 
+                type="text" 
+                v-model="blogForm.title" 
+                placeholder="请输入博客标题" 
+                required
+                class="form-input"
+              >
+            </div>
+            <div class="form-item">
+              <label>发布地点</label>
+              <input 
+                type="text" 
+                v-model="blogForm.location" 
+                placeholder="请输入发布地点" 
+                required
+                class="form-input"
+              >
+            </div>
+            <div class="form-item">
+              <label>选择博主（自己）</label>
+              <select v-model="blogForm.bloggerId" class="form-select" required>
+                <option v-for="blogger in bloggers" :key="blogger.id" :value="blogger.id">
+                  {{ blogger.name }}
+                </option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="cancel-btn" @click="closePublishModal">取消</button>
+              <button type="submit" class="submit-btn" :disabled="publishing">
+                {{ publishing ? '发布中...' : '发布' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -104,7 +154,6 @@ import avatar2 from '../imgs/头像2.jpg';
 import avatar3 from '../imgs/头像3.jpg';
 import avatar4 from '../imgs/头像4.jpg';
 import avatar5 from '../imgs/头像5.jpg';
-// 新增6-10号博主头像（你需要替换为实际图片路径）
 import avatar6 from '../imgs/头像6.jpg';
 import avatar7 from '../imgs/头像7.jpg';
 import avatar8 from '../imgs/头像8.jpg';
@@ -117,7 +166,6 @@ import cover3 from '../imgs/动态5.jpg';
 import cover4 from '../imgs/动态6.jpg';
 import cover5 from '../imgs/动态6.webp';
 import cover6 from '../imgs/动态4.webp';
-// 新增动态封面（可选）
 import cover7 from '../imgs/动态6.jpg';
 import cover8 from '../imgs/动态3.jpg';
 import cover9 from '../imgs/动态2.jpg';
@@ -128,7 +176,6 @@ export default {
     return {
       activeTab: 'recommend',
       feedList: [],
-      // 扩展博主列表：从5个增加到10个
       bloggers: [
         { id: 1, name: "江姐故里", avatar: avatar1, followed: false, official: true, officialLabel: "江姐故里官方" },
         { id: 2, name: "告白预行绘本", avatar: avatar2, followed: false, official: true, officialLabel: "告白预行绘本官方" },
@@ -143,7 +190,15 @@ export default {
       ],
       page: 1,
       loading: false,
-      hasMore: true
+      hasMore: true,
+      // 发布博客相关
+      showPublishModal: false,
+      publishing: false,
+      blogForm: {
+        title: '',
+        location: '',
+        bloggerId: 1 // 默认选中第一个博主
+      }
     };
   },
   created() {
@@ -173,7 +228,6 @@ export default {
       this.loading = true;
       await new Promise(resolve => setTimeout(resolve, 800));
       const getBloggerById = (id) => ({ ...this.bloggers.find(b => b.id === id) });
-      // 扩展动态数据，新增6-10号博主的动态
       const mockData = [
         {
           id: Date.now() + Math.random(),
@@ -242,7 +296,6 @@ export default {
           comments: 18,
           shares: 9
         },
-        // 新增6-10号博主的动态
         {
           id: Date.now() + Math.random(),
           blogger: getBloggerById(6),
@@ -326,13 +379,188 @@ export default {
     },
     goToBlogger(bloggerId) {
       this.$router.push({ path: `/blogger/${bloggerId}` });
+    },
+    // 打开发布弹窗
+    openPublishModal() {
+      this.showPublishModal = true;
+      // 重置表单
+      this.blogForm = {
+        title: '',
+        location: '',
+        bloggerId: 1
+      };
+    },
+    // 关闭发布弹窗
+    closePublishModal() {
+      this.showPublishModal = false;
+      this.publishing = false;
+    },
+    // 提交博客（模拟后端）
+    async submitBlog() {
+      this.publishing = true;
+      
+      try {
+        // 模拟后端请求
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 构造新博客数据
+        const getBloggerById = (id) => ({ ...this.bloggers.find(b => b.id === id) });
+        const newBlog = {
+          id: Date.now() + Math.random(),
+          blogger: getBloggerById(this.blogForm.bloggerId),
+          postTime: '刚刚',
+          location: this.blogForm.location,
+          cover: cover1, // 默认封面
+          title: this.blogForm.title,
+          updateLabel: '',
+          views: 0,
+          comments: 0,
+          shares: 0
+        };
+        
+        // 添加到前端列表（真实场景是后端返回后更新）
+        this.feedList.unshift(newBlog);
+        
+        // 提示成功
+        alert('博客发布成功！');
+        this.closePublishModal();
+      } catch (error) {
+        alert('发布失败，请重试！');
+        this.publishing = false;
+      }
     }
   }
 };
 </script>
 
 <style scoped>
-/* 基础重置 */
+/* 原有样式保持不变，新增以下样式 */
+
+/* 左下角固定发布按钮 */
+.publish-btn {
+  position: fixed;
+  right: -4vw;
+  bottom: 3vw;
+  width: clamp(50px, 10vw, 80px);
+  height: clamp(50px, 10vw, 80px);
+  border-radius: 50%;
+  background-color: #a62b28;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 999;
+}
+
+.publish-btn:hover {
+  background-color: #8c2320;
+}
+
+/* 弹窗遮罩 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* 弹窗内容 */
+.modal-content {
+  width: clamp(300px, 80vw, 600px);
+  background-color: #fff;
+  border-radius: clamp(8px, 1.5vw, 16px);
+  padding: 2vw;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2vw;
+  padding-bottom: 1vw;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h3 {
+  font-size: clamp(16px, 2.5vw, 22px);
+  color: #333;
+  margin: 0;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: clamp(18px, 3vw, 24px);
+  cursor: pointer;
+  color: #999;
+}
+
+/* 表单样式 */
+.modal-body {
+  padding: 1vw 0;
+}
+
+.form-item {
+  margin-bottom: 2vw;
+}
+
+.form-item label {
+  display: block;
+  margin-bottom: 0.8vw;
+  font-size: clamp(14px, 2vw, 18px);
+  color: #666;
+}
+
+.form-input, .form-select {
+  width: 100%;
+  padding: 1.2vw;
+  border: 1px solid #ddd;
+  border-radius: clamp(4px, 1vw, 8px);
+  font-size: clamp(14px, 2vw, 18px);
+  box-sizing: border-box;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5vw;
+  margin-top: 2vw;
+}
+
+.cancel-btn {
+  padding: 1vw 2vw;
+  border: 1px solid #ddd;
+  border-radius: clamp(4px, 1vw, 8px);
+  background-color: #fff;
+  color: #666;
+  cursor: pointer;
+  font-size: clamp(14px, 2vw, 18px);
+}
+
+.submit-btn {
+  padding: 1vw 2vw;
+  border: none;
+  border-radius: clamp(4px, 1vw, 8px);
+  background-color: #a62b28;
+  color: #fff;
+  cursor: pointer;
+  font-size: clamp(14px, 2vw, 18px);
+}
+
+.submit-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* 原有样式 */
 * {
   margin: 0;
   padding: 0;
@@ -345,33 +573,31 @@ html, body {
   overflow-x: hidden;
 }
 
-/* 页面容器 - 全屏适配 */
 .feed-page {
-  width: 100vw; /* 视口宽度100% */
-  min-height: 100vh; /* 视口高度100% */
-  background-color: #e4dfc7; /* 统一整体背景色，解决串色 */
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #e4dfc7;
   font-family: "Microsoft Yahei", sans-serif;
   position: relative;
-  font-size: 16px; /* 基础字体大小 */
+  font-size: 16px;
 }
 
-/* 顶部导航 - 自适应 */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2vw 3vw; /* 使用视口单位适配 */
+  padding: 2vw 3vw;
   background-color: #f5f0e6;
   border-bottom: 1px solid #f5f0e6;
 }
 
 .tab-nav {
   display: flex;
-  gap: 3vw; /* 视口单位间距 */
+  gap: 3vw;
 }
 
 .tab {
-  font-size: clamp(14px, 2.5vw, 20px); /* 自适应字体：最小14px，最大20px，中间按视口比例 */
+  font-size: clamp(14px, 2.5vw, 20px);
   color: #666;
   cursor: pointer;
   padding: 0.5vw 0;
@@ -398,7 +624,6 @@ html, body {
   justify-content: center;
 }
 
-/* 提示文字 */
 .tip {
   text-align: center;
   font-size: clamp(12px, 2vw, 16px);
@@ -407,19 +632,16 @@ html, body {
   background-color: #e4dfc7;
 }
 
-/* 博主头像栏 - 优化布局，适配更多博主 */
 .blogger-bar {
   display: flex;
-  gap: 1.5vw; /* 减小间距，容纳更多博主 */
+  gap: 1.5vw;
   padding: 1.5vw 3vw;
   background-color: #f5f0e6;
   overflow-x: auto;
   white-space: nowrap;
-  /* 隐藏滚动条但保留滚动功能 */
-  scrollbar-width: none; /* 火狐 */
+  scrollbar-width: none;
 }
 
-/* 隐藏Chrome等浏览器的滚动条 */
 .blogger-bar::-webkit-scrollbar {
   display: none;
 }
@@ -429,12 +651,12 @@ html, body {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  min-width: clamp(60px, 10vw, 90px); /* 最小宽度，确保显示完整 */
+  min-width: clamp(60px, 10vw, 90px);
 }
 
 .avatar-container {
   position: relative !important;
-  width: clamp(40px, 7vw, 70px); /* 微调头像大小，容纳更多 */
+  width: clamp(40px, 7vw, 70px);
   height: clamp(40px, 7vw, 70px);
 }
 
@@ -444,7 +666,7 @@ html, body {
 }
 
 .avatar {
-  width: 100%; /* 继承容器大小，自适应 */
+  width: 100%;
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
@@ -459,7 +681,6 @@ html, body {
   object-fit: cover;
 }
 
-/* V标 - 自适应 */
 .v-badge {
   position: absolute !important;
   right: 0px !important;
@@ -493,14 +714,13 @@ html, body {
   text-decoration: none !important;
 }
 
-/* 动态流列表 - 修复串色问题 */
 .feed-list {
-  min-height: calc(100vh - 180px); /* 更稳定的高度计算 */
-  height: auto; /* 自动适应内容高度 */
-  overflow-y: auto; /* 仅在内容超出时滚动 */
-  padding: 0 3vw 1vw; /* 减少底部内边距 */
+  min-height: calc(100vh - 180px);
+  height: auto;
+  overflow-y: auto;
+  padding: 0 3vw 1vw;
   width: 100%;
-  background-color: #f5f0e6; /* 和页面/卡片背景色统一 */
+  background-color: #f5f0e6;
 }
 
 .feed-item {
@@ -512,7 +732,6 @@ html, body {
   width: 100%;
 }
 
-/* 博主头部信息 - 自适应 */
 .blogger-header {
   display: flex;
   justify-content: space-between;
@@ -592,7 +811,6 @@ html, body {
   color: #666 !important;
 }
 
-/* 博客内容 - 自适应 */
 .feed-content {
   padding: 1vw 3vw 1.5vw;
   background-color: #e4dfc7;
@@ -634,7 +852,6 @@ html, body {
   filter: invert(1);
 }
 
-/* 左下角标题 - 自适应 */
 .floating-title {
   position: absolute;
   bottom: 1.5vw;
@@ -648,7 +865,6 @@ html, body {
   text-shadow: 0 0 2px rgba(0,0,0,0.5);
 }
 
-/* 内容底部布局 - 自适应 */
 .content-footer {
   display: flex;
   justify-content: space-between;
@@ -685,7 +901,6 @@ html, body {
   height: clamp(14px, 2.5vw, 24px);
 }
 
-/* 加载状态 - 自适应 */
 .loading, .no-more {
   text-align: center;
   font-size: clamp(12px, 2vw, 18px);
@@ -701,7 +916,6 @@ html, body {
   padding: 5vw 0;
 }
 
-/* 大屏适配优化（不再限制最大宽度，而是自适应放大） */
 @media (min-width: 768px) {
   .feed-page {
     width: 100%;
@@ -709,7 +923,6 @@ html, body {
   .feed-list {
     min-height: calc(100vh - 200px);
   }
-  /* 大屏下博主头像间距微调 */
   .blogger-bar {
     gap: 2vw;
   }
@@ -719,12 +932,10 @@ html, body {
   }
 }
 
-/* 移动端小屏适配 */
 @media (max-width: 480px) {
   .feed-list {
     min-height: calc(100vh - 160px);
   }
-  /* 小屏下减小头像大小，容纳更多博主 */
   .avatar-container {
     width: clamp(35px, 7vw, 60px);
     height: clamp(35px, 7vw, 60px);
