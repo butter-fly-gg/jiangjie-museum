@@ -54,14 +54,15 @@
     <div class="section-title">江姐故里园区导览</div>
     <div class="map-card">
       <img src="../imgs/t园区导览.png" alt="导览" />
-       <button class="enter-guide-btn">进入导览</button>
+       <button class="enter-guide-btn" @click="goToBeautifulAR">进入导览</button>
     </div>
 
     <!-- 5. 推荐功能模块 (仿截图布局) -->
     <div class="recommend-section">
       <div class="rec-grid">
+        
         <!-- 左侧大卡片：故里游玩路线规划 -->
-        <div class="rec-card large-card">
+        <div class="rec-card large-card" @click="goToBeautifulMap">
           <img src="../imgs/t故里游玩路线规划.png" alt="路线规划" class="card-bg" />
           <div class="card-overlay">
           </div>
@@ -90,7 +91,7 @@
     </div>
     
     <div class="panorama-container">
-      <img src="https://images.unsplash.com/photo-1444491741275-3747c53c99b4?q=80&w=2070&auto=format&fit=crop" alt="全景" class="pano-img" />
+      <img src="../imgs/自贡mb.png" alt="全景" class="pano-img" />
       <div class="pano-footer">
         <div class="update-info">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
@@ -104,8 +105,14 @@
     </div>
 
     <!-- 底部留白，防止被导航栏遮挡 -->
-    <div style="height: 60px;"></div>
-  </div>
+    <div style="height: 20px;"></div>
+    </div>
+    <div class="footer">
+      <div class="footer-content">
+        <div class="footer-logo">
+        </div>
+      </div>
+    </div>
 </template>
 
 <script setup>
@@ -126,6 +133,17 @@ const goToVolunteer = () => {
 // 跳转到文创商店页面
 const goToShop = () => {
   router.push({ name: 'TravelShop' })
+}
+
+
+// 跳转到BeautifulAR页面
+const goToBeautifulAR = () => {
+  router.push({ name: 'BeautifulAR' })
+}
+
+// 跳转到美丽地图页面
+const goToBeautifulMap = () => {
+  router.push({ name: 'BeautifulMap' })
 }
 </script>
 
@@ -312,7 +330,7 @@ const goToShop = () => {
   margin-bottom: 20px;
   background: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  height: 800px;
+  height: auto;
 }
 .enter-guide-btn {
   position: absolute;
