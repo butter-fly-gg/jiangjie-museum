@@ -111,7 +111,7 @@ const playAudio = () => {
 };
 
 const goToAR = () => {
-  router.push('/ar/experience');
+  router.push('/beautiful/ar/detail');
 };
 </script>
 
