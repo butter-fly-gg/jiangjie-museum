@@ -40,14 +40,14 @@
     </div>
 
     <!-- 3. 广告横幅 -->
-    <div class="banner-card">
+    <div class="banner-card" @click="goToBeautiful">
       <img
         src="../imgs/t大美自贡.png" alt="大美自贡" class="banner-img"/>
       <div class="banner-content">
         <h2 class="banner-title">大美自贡</h2>
         <p class="banner-subtitle">定制属于您的个性化出游自贡行程</p>
       </div>
-      <button class="banner-btn">立即前往</button>
+      <button class="banner-btn" >立即前往</button>
     </div>
 
     <!-- 4. 导览入口 -->
@@ -144,6 +144,11 @@ const goToBeautifulAR = () => {
 // 跳转到美丽地图页面
 const goToBeautifulMap = () => {
   router.push({ name: 'BeautifulMap' })
+}
+
+// 跳转到美丽地图页面
+const goToBeautiful = () => {
+  router.push({ name: 'Beautiful' })
 }
 </script>
 
