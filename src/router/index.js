@@ -16,6 +16,8 @@ import MinePage from '../views/MinePage.vue'
 import MineBook from '../views/MineBook.vue'
 import MineBook_1 from '../views/MineBook_1.vue'
 import FlowerPage from '../views/FlowerPage.vue'
+import HomeView from '@/views/HomeView.vue'
+import ModeSelectView from '@/views/ModeSelectView.vue'
 
 const routes = [
   {
@@ -97,6 +99,16 @@ const routes = [
     name: 'Flower',
     component: FlowerPage
   },
+  {
+      path: '/homev',
+      name: 'homev',
+      component: HomeView
+    },
+    {
+      path: '/mode-select',
+      name: 'modeSelect',
+      component: ModeSelectView
+    },
    // 临时占位路由
   { path: '/activity', name: 'Activity', component: { template: '<div>页面建设中...</div>' } },
 ]
