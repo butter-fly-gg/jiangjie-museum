@@ -16,9 +16,21 @@
 
       <!-- 头像与状态 -->
       <div class="avatar-container">
-        <img src="../imgs/图层 26.png" alt="头像" class="avatar">
-        <div class="status-text">*对方正在使坏中*</div>
-        <div class="uid">UID 24728499001</div>
+        <div class="avatar-wrapper" @click="triggerFileInput">
+          <img :src="avatarUrl" alt="头像" class="avatar">
+          <div class="avatar-overlay">
+            <span>更换头像</span>
+          </div>
+        </div>
+        <input 
+          ref="fileInput" 
+          type="file" 
+          accept="image/*" 
+          style="display: none" 
+          @change="handleAvatarUpload"
+        >
+        <div class="status-text">{{ userInfo.nickname || userInfo.username || '用户' }}</div>
+        <div class="uid">UID {{ userInfo.id || '000000' }}</div>
       </div>
 
       <!-- 数据统计 -->
@@ -57,18 +69,112 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { authAPI } from '@/api';
+import defaultAvatar from '@/imgs/图层 26.png';
 // 引入Vue Router的useRouter方法
 import { useRouter } from 'vue-router';
 
 // 创建router实例
 const router = useRouter();
 
+// 文件输入引用
+const fileInput = ref(null);
+
+// 头像 URL
+const avatarUrl = ref(defaultAvatar);
+
+// 用户信息
+const userInfo = ref({
+  id: null,
+  username: '',
+  nickname: '',
+  avatar: '',
+  role: '',
+  phone: ''
+});
+
+onMounted(async () => {
+  const storedUserInfo = localStorage.getItem('userInfo');
+  if (storedUserInfo) {
+    userInfo.value = JSON.parse(storedUserInfo);
+    avatarUrl.value = userInfo.value.avatar || defaultAvatar;
+
+    // 拉取一次后端最新用户信息，确保跨设备/重新登录后头像同步
+    try {
+      const response = await authAPI.getUserInfo(userInfo.value.id);
+      if (response.code === 200 && response.data) {
+        userInfo.value = { ...userInfo.value, ...response.data };
+        avatarUrl.value = userInfo.value.avatar || defaultAvatar;
+        localStorage.setItem('userInfo', JSON.stringify(userInfo.value));
+      }
+    } catch (error) {
+      console.error('获取用户信息失败:', error);
+    }
+
+    console.log('用户信息:', userInfo.value);
+  } else {
+    console.log('未登录');
+    avatarUrl.value = defaultAvatar;
+  }
+});
+
+
+// 触发文件选择
+const triggerFileInput = () => {
+  fileInput.value.click();
+};
+
+// 处理头像上传
+const handleAvatarUpload = (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // 验证文件类型
+  if (!file.type.startsWith('image/')) {
+    alert('请选择图片文件！');
+    return;
+  }
+
+  // 验证文件大小（限制 5MB）
+  if (file.size > 5 * 1024 * 1024) {
+    alert('图片大小不能超过 5MB！');
+    return;
+  }
+
+  // 本地预览
+  const previewUrl = URL.createObjectURL(file);
+  avatarUrl.value = previewUrl;
+
+  // 上传文件到后端，数据库只保存URL，避免超长字符串导致失败
+  authAPI.uploadAvatar(userInfo.value.id, file)
+    .then((response) => {
+      if (response.code === 200 && response.data?.avatar) {
+        userInfo.value.avatar = response.data.avatar;
+        avatarUrl.value = response.data.avatar;
+        localStorage.setItem('userInfo', JSON.stringify(userInfo.value));
+        console.log('头像已保存到数据库');
+      } else {
+        alert(response.message || '头像保存失败');
+      }
+    })
+    .catch((error) => {
+      console.error('上传头像失败:', error);
+      alert('网络错误，头像保存失败');
+    })
+    .finally(() => {
+      URL.revokeObjectURL(previewUrl);
+    });
+  
+  // 清空 input，允许重复选择同一文件
+  event.target.value = '';
+};
+
 // 菜单列表数据（包含图标样式类）
 const menuList = ref([
   { title: '我的收藏', iconClass: 'icon-favorite' },
-  { title: '出行预约', iconClass: 'icon-reserve', path: '/mine/book' }, // 新增path字段
-  { title: '历史订单', iconClass: 'icon-order' },
+  { title: '出行预约', iconClass: 'icon-reserve', path: '/mine/book' },
+  { title: '历史订单', iconClass: 'icon-order', path: '/mine/orders' },
   { title: '我的活动', iconClass: 'icon-activity' },
   { title: '意见反馈', iconClass: 'icon-feedback' },
   { title: '设置', iconClass: 'icon-settings' }
@@ -162,13 +268,52 @@ const handleMenuClick = (item) => {
   text-align: center;
   color: #fff;
 }
+
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
 .avatar {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   border: 3px solid #fff;
-  margin-bottom: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.avatar-overlay span {
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.avatar-wrapper:hover .avatar {
+  transform: scale(1.05);
+}
+
+.avatar-wrapper:hover .avatar-overlay {
+  opacity: 1;
 }
 .status-text {
   font-size: 14px;
@@ -267,27 +412,27 @@ const handleMenuClick = (item) => {
   display: inline-block;
 }
 .icon-favorite {
-  background: url('../imgs/图层\ 16.png') no-repeat center;
+  background: url('../imgs/图层 16.png ') no-repeat center;
   background-size: contain;
 }
 .icon-reserve {
-  background: url('../imgs/图层\ 17.png') no-repeat center;
+  background: url('../imgs/图层 17.png') no-repeat center;
   background-size: contain;
 }
 .icon-order {
-  background: url('../imgs/图层\ 18.png') no-repeat center;
+  background: url('../imgs/图层 18.png') no-repeat center;
   background-size: contain;
 }
 .icon-activity {
-  background: url('../imgs/图层\ 19.png') no-repeat center;
+  background: url('../imgs/图层 19.png') no-repeat center;
   background-size: contain;
 }
 .icon-feedback {
-  background: url('../imgs/图层\ 20.png') no-repeat center;
+  background: url('../imgs/图层 20.png') no-repeat center;
   background-size: contain;
 }
 .icon-settings {
-  background: url('../imgs/图层\ 21.png') no-repeat center;
+  background: url('../imgs/图层 21.png') no-repeat center;
   background-size: contain;
 }
 
@@ -336,6 +481,10 @@ const handleMenuClick = (item) => {
   .avatar {
     width: 90px;
     height: 90px; /* 原80px，头像放大 */
+  }
+  .avatar-overlay {
+    width: 90px;
+    height: 90px;
   }
   .stat-number {
     font-size: 18px; /* 原16px，统计数字放大 */
