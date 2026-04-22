@@ -3,7 +3,7 @@
     <!-- 1. 头部区域 -->
     <header class="header">
       <div class="user-avatar" @click="goToMine">
-        <img src="../imgs/图层 26.png" alt="用户" />
+        <img :src="avatarUrl" alt="用户" />
       </div>
       
       <div class="location-info">
@@ -116,9 +116,26 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import defaultAvatar from '@/imgs/图层 26.png'
 
 const router = useRouter()
+const avatarUrl = ref(defaultAvatar)
+
+onMounted(() => {
+  const storedUserInfo = localStorage.getItem('userInfo')
+  if (!storedUserInfo) {
+    avatarUrl.value = defaultAvatar
+    return
+  }
+  try {
+    const user = JSON.parse(storedUserInfo)
+    avatarUrl.value = user.avatar || defaultAvatar
+  } catch (e) {
+    avatarUrl.value = defaultAvatar
+  }
+})
 
 // 跳转到个人中心页面
 const goToMine = () => {

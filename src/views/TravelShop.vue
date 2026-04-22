@@ -104,25 +104,136 @@
         </div>
       </div>
     </div>
+
+    <div v-if="showAddressDialog" class="dialog-mask" @click.self="closeAddressDialog">
+      <div class="dialog-card">
+        <h3 class="dialog-title">选择购买数量</h3>
+        <div class="dialog-product" v-if="currentItem">
+          <div>{{ currentItem.title }}</div>
+          <div>¥{{ currentItem.price }}</div>
+        </div>
+        <div class="dialog-qty-row">
+          <span>购买数量</span>
+          <input v-model.number="quantityForm.quantity" class="dialog-qty" type="number" min="1" />
+        </div>
+        <div class="dialog-actions">
+          <button class="dialog-cancel" @click="closeAddressDialog">取消</button>
+          <button class="dialog-confirm" @click="confirmAddPurchase">确定</button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="toastMessage" class="toast-tip">{{ toastMessage }}</div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router' 
+import { useRouter } from 'vue-router'
+import { cartAPI, orderAPI } from '@/api'
 
 const router = useRouter()
 
 const hotItems = ref([])
 const seriesItems = ref([])
+const showAddressDialog = ref(false)
+const currentItem = ref(null)
+const quantityForm = ref({
+  quantity: 1
+})
+const toastMessage = ref('')
+let toastTimer = null
 
 const goBack = () => {
   router.push('/travel')
 }
 
+const getLoginUser = (needRedirect = true) => {
+  const userInfo = localStorage.getItem('userInfo')
+  if (!userInfo) {
+    if (needRedirect) {
+      alert('请先登录')
+      router.push('/login')
+    }
+    return null
+  }
+  return JSON.parse(userInfo)
+}
+
+const openAddressDialog = (item) => {
+  currentItem.value = item
+  quantityForm.value.quantity = 1
+  showAddressDialog.value = true
+}
+
+const closeAddressDialog = () => {
+  showAddressDialog.value = false
+  currentItem.value = null
+}
+
+const showToast = (message) => {
+  toastMessage.value = message
+  if (toastTimer) {
+    clearTimeout(toastTimer)
+  }
+  toastTimer = setTimeout(() => {
+    toastMessage.value = ''
+    toastTimer = null
+  }, 3000)
+}
+
 const addToCart = (item) => {
-  console.log('加入购物:', item.title)
-  alert(`已将 "${item.title}" 加入购物车`)
+  const user = getLoginUser()
+  if (!user) return
+  openAddressDialog(item)
+}
+
+const confirmAddPurchase = async () => {
+  const user = getLoginUser()
+  if (!user) return
+  if (!currentItem.value) return
+  if (!quantityForm.value.quantity || quantityForm.value.quantity <= 0) {
+    alert('数量必须大于0')
+    return
+  }
+
+  try {
+    const quantity = Number(quantityForm.value.quantity) || 1
+    const response = await cartAPI.addToCart({
+      userId: user.id,
+      productId: currentItem.value.id,
+      quantity,
+      productName: currentItem.value.title,
+      productCover: currentItem.value.img,
+      price: currentItem.value.price,
+      category: '文创'
+    })
+
+    if (response.code !== 200) {
+      alert(response.message || '加入购物车失败')
+      return
+    }
+
+    const createOrderRes = await orderAPI.createDirectOrder({
+      userId: user.id,
+      productId: currentItem.value.id,
+      productName: currentItem.value.title,
+      productCover: currentItem.value.img,
+      unitPrice: currentItem.value.price,
+      quantity
+    })
+
+    if (createOrderRes.code === 200) {
+      showToast(`加入购物车成功：${currentItem.value.title}`)
+      closeAddressDialog()
+      return
+    }
+
+    alert(createOrderRes.message || '订单创建失败')
+  } catch (error) {
+    console.error('加购/创建订单失败:', error)
+    alert('网络错误，请稍后重试')
+  }
 }
 
 import imgBook from '@/imgs/s研学绘本.png'       // 假设你的绘本图叫 book-cover.jpg
@@ -131,6 +242,7 @@ import imgWine from '@/imgs/s高粱酒.png'
 const fetchHotProducts = async () => {
   hotItems.value = [
     {
+      id: 1,
       rank: 'NO.1',
       engLabel: 'AR ILLUSTRATION TEENAGERS\' ARTBOOK',
       title: '《永远的江姐》\n青少年 AR 研学绘本',
@@ -139,6 +251,7 @@ const fetchHotProducts = async () => {
       link: null
     },
     {
+      id: 2,
       rank: 'NO.2',
       engLabel: 'SNOWY STAMP',
       title: '红梅傲雪公交印章',
@@ -147,6 +260,7 @@ const fetchHotProducts = async () => {
       link: null
     },
     {
+      id: 3,
       rank: 'NO.3',
       engLabel: 'SUPERNOVA WINE',
       title: '故居传承高粱酒',
@@ -161,8 +275,8 @@ import imgFan from '@/imgs/s漆扇.jpg'
 import imgHammer from '@/imgs/s养生锤.jpg'
 const fetchSeriesProducts = async () => {
   seriesItems.value = [
-    { title: '【故里国庆非遗漆扇】', price: 29, img: imgFan },
-    { title: '【经络疏通养生锤】', price: 30, img: imgHammer },
+    { id: 4, title: '【故里国庆非遗漆扇】', price: 29, img: imgFan },
+    { id: 5, title: '【经络疏通养生锤】', price: 30, img: imgHammer },
   //  { title: '【江姐故事明信片】', price: 15, img: imgCard },
   //  { title: '【红色记忆书签】', price: 9.9, img: imgBookmark }
   ]
@@ -558,5 +672,100 @@ onMounted(() => {
   background: #c43e3a;
   color: #fff;
   border-color: #c43e3a;
+}
+
+.dialog-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.dialog-card {
+  width: 100%;
+  max-width: 360px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.dialog-title {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.dialog-product {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: #666;
+}
+
+.dialog-input {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.dialog-qty-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  color: #333;
+  font-size: 14px;
+}
+
+.dialog-qty {
+  width: 90px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.dialog-cancel,
+.dialog-confirm {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 0;
+}
+
+.dialog-cancel {
+  background: #f2f2f2;
+  color: #666;
+}
+
+.dialog-confirm {
+  background: #c43e3a;
+  color: #fff;
+}
+
+.toast-tip {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: 20px;
+  z-index: 40;
+  max-width: 86%;
+  text-align: center;
 }
 </style>
