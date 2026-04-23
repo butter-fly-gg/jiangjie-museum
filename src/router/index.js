@@ -15,12 +15,13 @@ import BeautifulAR_1 from '../views/BeautifulAR_1.vue'
 import MinePage from '../views/MinePage.vue'
 import MineBook from '../views/MineBook.vue'
 import MineBook_1 from '../views/MineBook_1.vue'
+import OrderHistory from '../views/OrderHistory.vue'
 import FlowerPage from '../views/FlowerPage.vue'
 
 const routes = [
   {
     path: '/',
-    redirect: '/cover'
+    redirect: '/login'
   },
   {
     path: '/cover',
@@ -91,6 +92,11 @@ const routes = [
     path: '/mine/book/detail',
     name: 'MineBook_1',
     component: MineBook_1
+  },
+  {
+    path: '/mine/orders',
+    name: 'OrderHistory',
+    component: OrderHistory
   },
   {
     path: '/flower',
