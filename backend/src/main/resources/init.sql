@@ -42,7 +42,6 @@ CREATE TABLE IF NOT EXISTS `product_image` (
     FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---  订单/购物
 -- 订单/购物
 -- 购物车表
 CREATE TABLE IF NOT EXISTS `cart` (
@@ -55,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `cart` (
     FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 -- 订单表
-CREATE TABLE IF NOT EXISTS `trade_order` (
+CREATE TABLE IF NOT EXISTS `orders` (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     order_no VARCHAR(50) NOT NULL UNIQUE COMMENT '订单号',

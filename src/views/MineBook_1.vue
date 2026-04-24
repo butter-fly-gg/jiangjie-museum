@@ -15,16 +15,16 @@
         <div class="card-content">
           <div class="basic-info">
             <div class="info-item">
-              <span class="value">9629</span>
+              <span class="value">{{ reservation?.phone || '****' }}</span>
               <hr>
               <span class="label">预约手机号</span>
             </div>
             <div class="info-item code-item">
               <span class="label">核销码</span>
-              <span class="code">78116013</span>
+              <span class="code">{{ reservation?.verifyCode || '****' }}</span>
             </div>
             <div class="info-item">
-              <span class="value">14:30</span>
+              <span class="value">{{ reservation?.visitTime || '--:--' }}</span>
               <hr>
               <span class="label">预计抵达时间</span>
             </div>
@@ -37,27 +37,28 @@
           <div class="visit-info">
             <div class="info-item">
               <span class="label">参观时间</span>
-              <span class="value">10 26</span>
+              <span class="value">{{ formatDate(reservation?.visitDate) }}</span>
             </div>
             <div class="info-item">
               <span class="label">同行人数</span>
-              <span class="value">3</span>
+              <span class="value">{{ reservation?.peopleCount || 1 }}</span>
             </div>
           </div>
         </div>
       </div>
       <div class="dashed-divider"></div>
       <div class="qrcode-section">
-        <img src="../imgs/二维码.png" alt="预约二维码" class="qrcode">
-        <div class="qrcode-label">20241026 - 1 - 1</div>
-        <button class="refresh-btn" @click="refreshQrcode">刷新二维码</button>
-      </div>
+      <!-- 使用默认二维码图片 -->
+      <img src="../imgs/二维码.png" alt="预约二维码" class="qrcode">
+      <div class="qrcode-label">{{ reservation?.verifyCode || '预约码' }}</div>
+      <button class="refresh-btn" :disabled="refreshing" @click="refreshQrcode">{{ refreshing ? '刷新中...' : '刷新二维码' }}</button>
+    </div>
     </div>
 
     <!-- 底部按钮与印章容器 -->
     <div class="bottom-container">
       <div class="footer-buttons">
-        <button class="btn cancel-btn" @click="cancelBooking"><img src="../imgs/取消预约.png" alt="取消预约"></button>
+        <button class="btn cancel-btn" :disabled="canceling" @click="cancelBooking"><img src="../imgs/取消预约.png" alt="取消预约"></button>
         <button class="btn save-btn"><img src="../imgs/保存至本地.png" alt="保存至本地"></button>
       </div>
       <div class="seal">
@@ -68,13 +69,71 @@
 </template>
 
 <script setup>
-const refreshQrcode = () => {
-  console.log('刷新二维码')
-}
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { reservationAPI } from '../api/index';
 
-const cancelBooking = () => {
-  console.log('取消预约')
-}
+const route = useRoute();
+const router = useRouter();
+const reservation = ref(null);
+const refreshing = ref(false);
+const canceling = ref(false);
+
+const reservationId = route.query.reservationId;   // 从预约页传入的预约ID
+
+const fetchReservationDetail = async () => {
+  if (!reservationId) {
+    alert('缺少预约ID，无法查看详情');
+    router.back();
+    return;
+  }
+  try {
+    console.log('正在获取预约详情，ID:', reservationId);
+    const res = await reservationAPI.getReservationDetail(reservationId);
+    console.log('预约详情响应:', res);
+    if (res && res.code === 200) {
+      reservation.value = res.data;
+    } else {
+      alert(res?.message || '获取预约详情失败');
+    }
+  } catch (e) {
+    console.error('获取预约详情失败:', e);
+    alert('获取预约详情失败: ' + (e.message || '未知错误'));
+  }
+};
+
+const refreshQrcode = async () => {
+  refreshing.value = true;
+  await fetchReservationDetail();
+  refreshing.value = false;
+};
+
+const cancelBooking = async () => {
+  if (canceling.value) return;
+  if (!confirm('确定要取消本次预约吗？')) return;
+  canceling.value = true;
+  try {
+    const res = await reservationAPI.cancelReservation(reservationId);
+    if (res && res.code === 200) {
+      alert('预约已取消');
+      router.push('/mine/book');
+    } else {
+      alert(res?.message || '取消失败');
+    }
+  } catch (e) {
+    alert('取消失败');
+  } finally {
+    canceling.value = false;
+  }
+};
+
+// 格式化日期显示（假设visitDate是"2024-10-04"形式）
+const formatDate = (dateStr) => {
+  if (!dateStr) return '-- --';
+  return dateStr;  // 可根据需要进一步格式化
+};
+
+onMounted(fetchReservationDetail);
 </script>
 
 <style scoped>
