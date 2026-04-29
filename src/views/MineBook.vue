@@ -46,7 +46,6 @@
 
     <!-- 预约卡片 -->
     <div class="booking-card">
-      <!-- 原有预约卡片内容保持不变 -->
       <div class="card-header">
         <span class="main-title">预约详情</span>
         <span class="sub-header"><img src="../imgs/图层 16.png" >当前场馆:江姐生平事迹陈列展主馆</span>
@@ -115,7 +114,7 @@
           <div class="price">合计:¥{{ totalPrice.toFixed(2) }}</div>
           <div class="discount-text">优惠减:¥10.00 <a href="#" class="detail">优惠明细</a></div>
         </div>
-        <button class="booking-btn" @click="showModal = true">立即预约({{ selectedPerson }})</button>
+        <button class="booking-btn" :disabled="submitting" @click="submitBooking">立即预约({{ selectedPerson }})</button>
       </div>
     </div>
 
@@ -125,7 +124,7 @@
         <div class="modal-icon"><img src="../imgs/预约成功.png" alt=""></div>
         <div class="modal-title">恭喜您,预约成功</div>
         <div class="modal-buttons">
-          <button class="modal-btn primary" @click="$router.push('/mine/book/detail')"  title="查看" >前去查看</button>
+          <button class="modal-btn primary" @click="goToDetail">前去查看</button>
           <button class="modal-btn secondary" @click="closeModal">取消预约</button>
         </div>
       </div>
@@ -134,6 +133,8 @@
 </template>
 
 <script>
+import { reservationAPI } from '../api/index';
+
 export default {
   name: "BookingPage",
   data() {
@@ -145,7 +146,11 @@ export default {
       selectedPerson: 4,
       basePrice: 30.00,
       discount: 10.00,
-      videoPlaying: false
+      videoPlaying: false,
+      submitting: false,
+      scenicId: 1,
+      timeSlots: [],
+      reservationId: null,
     };
   },
   computed: {
@@ -187,7 +192,70 @@ export default {
     },
     closeModal() { 
       this.showModal = false; 
+    },
+    goToDetail() {
+      if (this.reservationId) {
+        this.$router.push({ path: '/mine/book/detail', query: { reservationId: this.reservationId } });
+      } else {
+        alert('预约信息异常，无法查看');
+      }
+    },
+    async submitBooking() {
+      if (this.submitting) return;
+      this.submitting = true;
+
+      try {
+        const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+        if (!userInfo || !userInfo.id) {
+          alert('请先登录');
+          this.submitting = false;
+          return;
+        }
+
+        if (!this.scenicId) {
+          alert('场馆信息异常，请刷新页面后重试');
+          this.submitting = false;
+          return;
+        }
+
+        const year = new Date().getFullYear();
+        const monthDay = this.selectedDate.replace('.', '-');
+        const visitDate = `${year}-${monthDay}`;
+
+        console.log('选择的日期:', this.selectedDate);
+        console.log('格式化后的日期:', visitDate);
+
+        const params = {
+          userId: userInfo.id,
+          venueId: this.scenicId,
+          phone: userInfo.phone || '13800138000',
+          visitDate: visitDate,
+          visitTime: this.selectedTime,
+          peopleCount: this.selectedPerson,
+          totalPrice: this.totalPrice
+        };
+
+        console.log('预约参数:', params);
+
+        const res = await reservationAPI.addReservation(params);
+
+        console.log('预约响应:', res);
+
+        if (res && res.code === 200) {
+          this.reservationId = res.data.id;
+          this.showModal = true;
+        } else {
+          alert(res?.message || '预约失败');
+        }
+
+      } catch (err) {
+        console.error("预约异常：", err);
+        alert('预约失败：' + (err.message || '服务器或网络异常'));
+      } finally {
+        this.submitting = false;
+      }
     }
+    
   }
 };
 </script>
@@ -229,7 +297,7 @@ body, html {
 }
 @media (min-width: 768px) {
   .video-section { 
-    height: 450px; /* 网页端视频更高，填充空间 */
+    height: 450px;
   }
 }
 .back-btn, .share-btn {
@@ -336,7 +404,6 @@ body, html {
   font-size: 10px;
 }
 
-/* 优惠横幅 - 全屏宽度 */
 /* 优惠横幅 */
 .banner {
   width: 100%;
@@ -349,7 +416,7 @@ body, html {
   overflow: visible;
   margin-bottom: -10px;
   z-index: 2;
-  filter: opacity(0.8); /* 透明度调整，0.8是比较柔和的效果，可根据需要微调 */
+  filter: opacity(0.8);
 }
 .banner span {
   position: relative;
@@ -361,7 +428,7 @@ body, html {
   margin-left: 4px;
 }
 
-/* 预约卡片 - 全屏宽度，无最大宽度限制 */
+/* 预约卡片 */
 .booking-card {
   width: 100%;
   background: #ffffff;
@@ -370,12 +437,11 @@ body, html {
   overflow: hidden;
   position: relative;
   z-index: 1;
-  flex: 1; /* 填充剩余空间，消除底部留白 */
+  flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-/* 预约详情头部 */
 .card-header {
   background-color: #ffffff;
   padding: 30px 16px 8px;
@@ -402,7 +468,6 @@ body, html {
   height: 10px;
 }
 
-/* 标签导航 */
 .tab-nav {
   display: flex;
   border-bottom: 1px solid #e5e0d5;
@@ -422,14 +487,13 @@ body, html {
   font-weight: bold;
 }
 
-/* 选择区域 - 填充剩余空间 */
 .select-area {
   padding: 14px 16px;
   background-color: #f5f0e6;
-  flex: 1; /* 填充空间，消除底部留白 */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* 元素垂直居中，更饱满 */
+  justify-content: center;
 }
 .small-icon {
   width: 14px;
@@ -438,7 +502,6 @@ body, html {
   vertical-align: middle;
 }
 
-/* 日期选择 */
 .date-select {
   margin-bottom: 14px;
 }
@@ -463,7 +526,7 @@ body, html {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 6px;
-  width: 100%; /* 全屏宽度 */
+  width: 100%;
 }
 .date-item {
   text-align: center;
@@ -486,7 +549,6 @@ body, html {
   color: #ffffff;
 }
 
-/* 时间选择 */
 .time-select {
   margin-bottom: 14px;
 }
@@ -499,7 +561,7 @@ body, html {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 6px;
-  width: 100%; /* 全屏宽度 */
+  width: 100%;
 }
 .time-item {
   text-align: center;
@@ -518,7 +580,6 @@ body, html {
   border-color: #a62b28;
 }
 
-/* 人数选择 */
 .person-select {
   margin-bottom: 0;
 }
@@ -526,7 +587,7 @@ body, html {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 6px;
-  width: 100%; /* 全屏宽度 */
+  width: 100%;
 }
 .person-item {
   text-align: center;
@@ -545,7 +606,6 @@ body, html {
   border-color: #a62b28;
 }
 
-/* 合计栏 */
 .total-bar {
   display: flex;
   justify-content: space-between;
@@ -553,7 +613,7 @@ body, html {
   padding: 10px 16px;
   background-color: #f5e6cc;
   border-top: 1px solid #e5e0d5;
-  width: 100%; /* 全屏宽度 */
+  width: 100%;
 }
 .total-info .price {
   font-size: 16px;
@@ -582,7 +642,6 @@ body, html {
   cursor: pointer;
 }
 
-/* 弹窗样式 */
 .modal {
   position: fixed;
   top: 0;
@@ -642,21 +701,18 @@ body, html {
   color: #333;
 }
 
- /* 网页端适配 - 全屏铺满+元素放大 */
+ /* 网页端适配 */
 @media (min-width: 768px) {
-  /* 选择项网格列数增加+间距加大+尺寸放大 */
   .date-grid, .time-grid, .person-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 自动适配列数，最小宽度120px */
-    gap: 25px; /* 更大的间距 */
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 25px;
   }
   .date-item, .time-item, .person-item {
-    padding: 20px 0; /* 按钮更高 */
-    font-size: 18px; /* 文字更大 */
+    padding: 20px 0;
+    font-size: 18px;
     border-radius: 8px;
-    min-width: 120px; /* 确保每个选项足够宽 */
+    min-width: 120px;
   }
-
-  /* 文字放大 */
   .date-header, .time-label, .person-label {
     font-size: 18px;
     margin-bottom: 15px;
@@ -677,8 +733,6 @@ body, html {
   .total-info .discount-text {
     font-size: 16px;
   }
-
-  /* 按钮放大 */
   .booking-btn {
     padding: 15px 30px;
     font-size: 18px;
@@ -694,8 +748,6 @@ body, html {
     font-size: 18px;
     padding: 20px 30px 30px;
   }
-
-  /* 播放按钮放大 */
   .play-btn {
     width: 100px;
     height: 100px;

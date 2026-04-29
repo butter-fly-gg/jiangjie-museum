@@ -6,12 +6,24 @@
   <component name="ChangeListManager">
     <list default="true" id="efbef01e-6e47-4212-866c-7faf3901f6fe" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/jiangjie/config/TestConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/jiangjie/controller/TestController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/jiangjie/entity/TestEntity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/jiangjie/mapper/TestMapper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/jiangjie/service/impl/TestService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/init.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/com/jiangjie/AppTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/BackendApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/BackendApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/common/Result.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/common/Result.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/controller/TestController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/entity/Cart.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/entity/Cart.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/entity/Order.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/entity/Order.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/entity/Product.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/entity/Product.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/entity/TestEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/entity/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/entity/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/service/OrderService.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/jiangjie/service/OrderService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/init.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/node_modules/.cache/eslint/11faf649.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.cache/eslint/11faf649.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/MineBook.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/MineBook.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/MineBook_1.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/MineBook_1.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +54,7 @@
     &quot;Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,

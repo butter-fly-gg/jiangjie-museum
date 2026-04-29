@@ -1,6 +1,7 @@
 // API 配置
 const API_BASE_URL = 'http://localhost:8080/api';
 
+
 // 通用请求函数
 const request = async (url, options = {}) => {
   try {
@@ -266,6 +267,35 @@ export const healthCheck = () => {
   return request('/hello');
 };
 
+
+
+export const reservationAPI = {
+  // 新增预约
+  addReservation: (data) => {
+    return request('/reservation/add', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  // 获取预约列表
+  getReservationList: (userId) => {
+    return request(`/reservation/list/${userId}`);
+  },
+
+  // 获取预约详情（参数名改为 reservationId）
+  getReservationDetail: (reservationId) => {
+    return request(`/reservation/detail/${reservationId}`);
+  },
+
+  // 取消预约
+  cancelReservation: (reservationId) => {
+    return request(`/reservation/cancel/${reservationId}`, {
+      method: 'PUT',
+    });
+  }
+};
+
 // 默认导出所有 API
 export default {
   auth: authAPI,
@@ -274,5 +304,6 @@ export default {
   travel: travelAPI,
   shop: shopAPI,
   volunteer: volunteerAPI,
-  health: healthCheck
+  health: healthCheck,
+  reservation: reservationAPI
 };
