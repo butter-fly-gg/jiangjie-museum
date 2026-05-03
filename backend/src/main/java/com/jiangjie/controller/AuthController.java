@@ -1,12 +1,14 @@
 package com.jiangjie.controller;
 
 import com.jiangjie.common.Result;
+import com.jiangjie.dto.UserLoginDTO;
+import com.jiangjie.dto.UserRegisterDTO;
+import com.jiangjie.dto.UserUpdateDTO;
 import com.jiangjie.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -19,38 +21,16 @@ public class AuthController {
      * 用户注册
      */
     @PostMapping("/register")
-    public Result<?> register(@RequestBody Map<String, String> params) {
-        String username = params.get("username");
-        String password = params.get("password");
-        String nickname = params.get("nickname");
-        String phone = params.get("phone");
-
-        if (username == null || username.trim().isEmpty()) {
-            return Result.error("用户名不能为空");
-        }
-        if (password == null || password.trim().isEmpty()) {
-            return Result.error("密码不能为空");
-        }
-
-        return userService.register(username, password, nickname, phone);
+    public Result<?> register(@Valid @RequestBody UserRegisterDTO registerRequest) {
+        return userService.register(registerRequest);
     }
 
     /**
      * 用户登录
      */
     @PostMapping("/login")
-    public Result<?> login(@RequestBody Map<String, String> params) {
-        String username = params.get("username");
-        String password = params.get("password");
-
-        if (username == null || username.trim().isEmpty()) {
-            return Result.error("用户名不能为空");
-        }
-        if (password == null || password.trim().isEmpty()) {
-            return Result.error("密码不能为空");
-        }
-
-        return userService.login(username, password);
+    public Result<?> login(@Valid @RequestBody UserLoginDTO loginRequest) {
+        return userService.login(loginRequest);
     }
 
     /**
@@ -65,12 +45,8 @@ public class AuthController {
      * 更新用户信息
      */
     @PutMapping("/user/{userId}")
-    public Result<?> updateUserInfo(@PathVariable Integer userId, @RequestBody Map<String, String> params) {
-        String nickname = params.get("nickname");
-        String avatar = params.get("avatar");
-        String phone = params.get("phone");
-
-        return userService.updateUserInfo(userId, nickname, avatar, phone);
+    public Result<?> updateUserInfo(@PathVariable Integer userId, @Valid @RequestBody UserUpdateDTO updateRequest) {
+        return userService.updateUserInfo(userId, updateRequest);
     }
 
     /**

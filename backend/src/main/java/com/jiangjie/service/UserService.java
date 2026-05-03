@@ -2,11 +2,15 @@ package com.jiangjie.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.jiangjie.common.Result;
+import com.jiangjie.dto.UserLoginDTO;
+import com.jiangjie.dto.UserRegisterDTO;
+import com.jiangjie.dto.UserUpdateDTO;
 import com.jiangjie.entity.User;
 import com.jiangjie.mapper.UserMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -36,7 +40,12 @@ public class UserService {
     /**
      * 用户注册
      */
-    public Result<?> register(String username, String password, String nickname, String phone) {
+    public Result<?> register(@Valid UserRegisterDTO registerRequest) {
+        String username = registerRequest.getUsername();
+        String password = registerRequest.getPassword();
+        String nickname = registerRequest.getNickname();
+        String phone = registerRequest.getPhone();
+        
         // 检查用户名是否已存在
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getUsername, username);
@@ -65,7 +74,10 @@ public class UserService {
     /**
      * 用户登录
      */
-    public Result<?> login(String username, String password) {
+    public Result<?> login(@Valid UserLoginDTO loginRequest) {
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
+        
         // 查询用户
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getUsername, username);
@@ -132,12 +144,16 @@ public class UserService {
     /**
      * 更新用户信息
      */
-    public Result<?> updateUserInfo(Integer userId, String nickname, String avatar, String phone) {
+    public Result<?> updateUserInfo(Integer userId, @Valid UserUpdateDTO updateRequest) {
         User user = userMapper.selectById(userId);
         
         if (user == null) {
             return Result.error("用户不存在");
         }
+        
+        String nickname = updateRequest.getNickname();
+        String avatar = updateRequest.getAvatar();
+        String phone = updateRequest.getPhone();
         
         if (nickname != null) {
             user.setNickname(nickname);
@@ -185,8 +201,21 @@ public class UserService {
 
         try {
             File uploadDir = new File("uploads/avatar");
-            if (!uploadDir.exists() && !uploadDir.mkdirs()) {
-                return Result.error("创建头像目录失败");
+            // 防御性编程：检查目录是否存在，如果不存在则尝试创建
+            if (!uploadDir.exists()) {
+                boolean created = uploadDir.mkdirs();
+                if (!created) {
+                    // 如果创建失败，尝试创建父目录
+                    File parentDir = uploadDir.getParentFile();
+                    if (parentDir != null && !parentDir.exists()) {
+                        parentDir.mkdirs();
+                    }
+                    // 再次尝试创建目标目录
+                    created = uploadDir.mkdirs();
+                    if (!created) {
+                        return Result.error("创建头像目录失败，请检查磁盘空间和权限");
+                    }
+                }
             }
 
             String filename = "avatar_" + userId + "_" + System.currentTimeMillis() + extension;
@@ -202,7 +231,7 @@ public class UserService {
             data.put("avatar", avatarUrl);
             return Result.success("头像上传成功", data);
         } catch (IOException e) {
-            return Result.error("头像上传失败");
+            return Result.error("头像上传失败：" + e.getMessage());
         }
     }
     

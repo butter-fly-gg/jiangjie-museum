@@ -2,12 +2,16 @@ package com.jiangjie.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.jiangjie.common.Result;
+import com.jiangjie.dto.CreateDirectOrderDTO;
+import com.jiangjie.dto.CreateOrderFromCartDTO;
+import com.jiangjie.dto.SettleOrderDTO;
 import com.jiangjie.entity.Cart;
 import com.jiangjie.entity.Order;
 import com.jiangjie.entity.Product;
 import com.jiangjie.mapper.CartMapper;
 import com.jiangjie.mapper.OrderMapper;
 import com.jiangjie.mapper.ProductMapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,9 +36,13 @@ public class OrderService {
     /**
      * 从购物车创建订单
      */
-    public Result<?> createOrderFromCart(Integer userId, List<Integer> cartIds, 
-                                         String receiverName, String receiverPhone, 
-                                         String receiverAddress) {
+    public Result<?> createOrderFromCart(@Valid CreateOrderFromCartDTO createRequest) {
+        Integer userId = createRequest.getUserId();
+        List<Integer> cartIds = createRequest.getCartIds();
+        String receiverName = createRequest.getReceiverName();
+        String receiverPhone = createRequest.getReceiverPhone();
+        String receiverAddress = createRequest.getReceiverAddress();
+        
         BigDecimal totalPrice = BigDecimal.ZERO;
         
         // 计算总价
@@ -45,9 +53,11 @@ public class OrderService {
             }
             
             Product product = productMapper.selectById(cart.getProductId());
-            if (product != null) {
-                totalPrice = totalPrice.add(product.getPrice().multiply(new BigDecimal(cart.getQuantity())));
+            if (product == null) {
+                // 商品不存在，跳过该购物车项
+                continue;
             }
+            totalPrice = totalPrice.add(product.getPrice().multiply(new BigDecimal(cart.getQuantity())));
         }
         
         if (totalPrice.compareTo(BigDecimal.ZERO) <= 0) {
@@ -79,15 +89,16 @@ public class OrderService {
     /**
      * 从商品页直接创建订单
      */
-    public Result<?> createDirectOrder(Integer userId, Integer productId, String productName, String productCover,
-                                       Object unitPriceRaw, Integer quantity) {
+    public Result<?> createDirectOrder(@Valid CreateDirectOrderDTO createRequest) {
+        Integer userId = createRequest.getUserId();
+        Integer productId = createRequest.getProductId();
+        String productName = createRequest.getProductName();
+        String productCover = createRequest.getProductCover();
+        BigDecimal unitPrice = createRequest.getUnitPrice();
+        Integer quantity = createRequest.getQuantity();
+        
         int safeQuantity = (quantity == null || quantity <= 0) ? 1 : quantity;
-        BigDecimal unitPrice;
-        try {
-            unitPrice = new BigDecimal(String.valueOf(unitPriceRaw));
-        } catch (Exception e) {
-            return Result.error("价格格式错误");
-        }
+        
         if (unitPrice.compareTo(BigDecimal.ZERO) <= 0) {
             return Result.error("价格必须大于0");
         }
@@ -110,7 +121,9 @@ public class OrderService {
     private String buildGoodsMeta(String productName, String productCover, BigDecimal unitPrice, Integer quantity) {
         String safeName = productName == null ? "" : productName.replace("|", "/");
         String safeCover = productCover == null ? "" : productCover.replace("|", "/");
-        return "GOODS|" + safeName + "|" + safeCover + "|" + unitPrice + "|" + quantity;
+        String safePrice = unitPrice == null ? "0.00" : unitPrice.toString();
+        String safeQuantity = quantity == null ? "1" : quantity.toString();
+        return "GOODS|" + safeName + "|" + safeCover + "|" + safePrice + "|" + safeQuantity;
     }
     
     /**
@@ -162,8 +175,7 @@ public class OrderService {
     /**
      * 结算订单
      */
-    public Result<?> settleOrder(Integer orderId, Integer userId, String receiverName,
-                                 String receiverPhone, String receiverAddress) {
+    public Result<?> settleOrder(Integer orderId, Integer userId, @Valid SettleOrderDTO settleRequest) {
         Order order = orderMapper.selectById(orderId);
         if (order == null || !order.getUserId().equals(userId)) {
             return Result.error("订单不存在");
@@ -171,6 +183,11 @@ public class OrderService {
         if ("cancelled".equals(order.getStatus())) {
             return Result.error("已取消订单不能结算");
         }
+        
+        String receiverName = settleRequest.getReceiverName();
+        String receiverPhone = settleRequest.getReceiverPhone();
+        String receiverAddress = settleRequest.getReceiverAddress();
+        
         if (receiverName == null || receiverName.isBlank()
                 || receiverPhone == null || receiverPhone.isBlank()
                 || receiverAddress == null || receiverAddress.isBlank()) {

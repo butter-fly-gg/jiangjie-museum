@@ -2,10 +2,13 @@ package com.jiangjie.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.jiangjie.common.Result;
+import com.jiangjie.dto.AddToCartDTO;
+import com.jiangjie.dto.UpdateCartQuantityDTO;
 import com.jiangjie.entity.Cart;
 import com.jiangjie.entity.Product;
 import com.jiangjie.mapper.CartMapper;
 import com.jiangjie.mapper.ProductMapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +28,21 @@ public class CartService {
     /**
      * 添加商品到购物车
      */
-    public Result<?> addToCart(Integer userId, Integer productId, Integer quantity,
-                               String productName, String productCover, Object priceRaw, String category) {
+    // AI辅助生成：qwen3.5, 2026-4-22
+    public Result<?> addToCart(@Valid AddToCartDTO addToCartRequest) {
+        Integer userId = addToCartRequest.getUserId();
+        Integer productId = addToCartRequest.getProductId();
+        Integer quantity = addToCartRequest.getQuantity();
+        String productName = addToCartRequest.getProductName();
+        String productCover = addToCartRequest.getProductCover();
+        BigDecimal price = addToCartRequest.getPrice();
+        String category = addToCartRequest.getCategory();
+        
         // 商品不存在时，自动创建基础商品数据
-        Product product = ensureProductExists(productId, productName, productCover, priceRaw, category);
+        Product product = ensureProductExists(productId, productName, productCover, price, category);
+        if (product == null) {
+            return Result.error("商品信息获取失败，请重试");
+        }
         Integer effectiveProductId = product.getId();
         
         // 检查库存
@@ -59,7 +73,7 @@ public class CartService {
     }
 
     private Product ensureProductExists(Integer productId, String productName, String productCover,
-                                        Object priceRaw, String category) {
+                                        BigDecimal price, String category) {
         Product product = productMapper.selectById(productId);
         if (product != null) {
             return product;
@@ -77,7 +91,7 @@ public class CartService {
         Product newProduct = new Product();
         newProduct.setName((productName == null || productName.isBlank()) ? ("商品" + productId) : productName);
         newProduct.setCover(productCover);
-        newProduct.setPrice(parsePrice(priceRaw));
+        newProduct.setPrice(price != null ? price : BigDecimal.ONE);
         newProduct.setOriginalPrice(newProduct.getPrice());
         newProduct.setStock(9999);
         newProduct.setSales(0);
@@ -88,18 +102,6 @@ public class CartService {
         newProduct.setCreateTime(LocalDateTime.now());
         productMapper.insert(newProduct);
         return newProduct;
-    }
-
-    private BigDecimal parsePrice(Object priceRaw) {
-        if (priceRaw == null) {
-            return BigDecimal.ONE;
-        }
-        try {
-            BigDecimal price = new BigDecimal(String.valueOf(priceRaw));
-            return price.compareTo(BigDecimal.ZERO) > 0 ? price : BigDecimal.ONE;
-        } catch (Exception e) {
-            return BigDecimal.ONE;
-        }
     }
     
     /**
@@ -123,7 +125,10 @@ public class CartService {
     /**
      * 更新购物车商品数量
      */
-    public Result<?> updateCartQuantity(Integer cartId, Integer quantity) {
+    public Result<?> updateCartQuantity(@Valid UpdateCartQuantityDTO updateRequest) {
+        Integer cartId = updateRequest.getCartId();
+        Integer quantity = updateRequest.getQuantity();
+        
         Cart cart = cartMapper.selectById(cartId);
         if (cart == null) {
             return Result.error("购物车记录不存在");
